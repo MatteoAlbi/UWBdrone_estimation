@@ -79,7 +79,7 @@ class Matrix {
         Matrix adj() const;
         Matrix inv() const;
         Matrix pinv() const;
-        double norm() const;
+        double norm2() const;
         Matrix normalize() const;
         void normalize_self();
 };

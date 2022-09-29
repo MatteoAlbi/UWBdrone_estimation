@@ -480,7 +480,7 @@ Matrix Matrix::pinv() const{
     }
 }
 
-double Matrix::norm() const{
+double Matrix::norm2() const{
     if(this->r == 1 || this->c == 1){
         double ret = 0;
         for(uint i=0; i< this->r+this->c-1; i++){
@@ -496,11 +496,11 @@ double Matrix::norm() const{
 }
 
 Matrix Matrix::normalize() const{
-    return Matrix(*this) / this->norm();
+    return Matrix(*this) / this->norm2();
 }
 
 void Matrix::normalize_self(){
-    this->operator/=(this->norm());
+    this->operator/=(this->norm2());
 }
 
 
