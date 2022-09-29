@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "math.h": "c",
+        "rtdoa_est.h": "c",
+        "linearalgebra.h": "c"
+    }
+}

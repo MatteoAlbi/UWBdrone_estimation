@@ -1,0 +1,17 @@
+Typical zero-g level offset accuracy(3) 				FS bit set to 00 					±40 mg
+
+Zero-g level change vs. temperature 				Max delta from 25 °C 				±0.5 mg/°C
+
+Acceleration noise density						FS bit set to 00, High-Resolution		220 μg/√Hz
+										mode (Table 10), ODR > 1300 Hz
+
+BW 										High-Resolution mode				ODR/9
+
+ODR:Data rate selection
+MAX ODR in HRmode: 1344 Hz -> BW = 1344/9 = 150 -> incertezza: 
+
+Sensitivity: FS bit set to 00; High-resolution mode									1 mg/digit
+
+Sensitivity  change vs. temperature 					FS bit set to 00 					±0.01 %/°C
+
+TSDr Temperature sensor output change vs. temperature 									1 digit/°C(2)
