@@ -2,70 +2,78 @@ clear all;
 close all;
 clc;
 
+% experiment parameters
 NoiseScale = 1e-2;
 BiasScale = 1e-1;
 Duration = 100;
 g = 9.807;
-
-%% Quaternion dynamics
+dt = 0.1;
 
 % Length of inputs
-dt = 0.1;
 t = 0:dt:Duration;
+n = length(t);
 
-% Inputs
+%% Real measurements generations
+
+% -- Input variables
+
+% Input angular velocity
 omega_x = 0.1*sin(2*pi*t/10);
 omega_y = 0.2*cos(2*pi*t/4);
 omega_z = 0.4*sin(2*pi*t/3);
 
-% Motor acceleration
+% Input motor acceleration
 a_M = g* 0.1 * (1 + sin(2*pi*t/7));
 
-% Quaterions
+% -- Variables initialization
+
+% Quaternions
 q = zeros(4,length(t));
 % q(:,1) = rand(1,4);
 % q(:,1) = q(:,1)/norm(q(:,1));
-q(:,1) = [0,0,0,1];
+q(:,1) = [0,0,0,1]; % initial state
 
-% Number of samples
-n = length(t);
-Z = zeros(4,n);
+% Magnetometer
 mw = [rand(1); 0; rand(1)];
-mw = mw/norm(mw);
-m = zeros(3,n);
+mw = mw/norm(mw); % world reference
+m = zeros(3,n); % body reference
+% Accelerometer
 a = zeros(3,n);
+% Acc and mag combination
+Z = zeros(4,n);
+% Position and velocity
 p = zeros(2,n);
 v = zeros(2,n);
 
+% Quaternions dynamic
 for k=1:n-1
+    % rotation
     S_omega = [0, -omega_x(k), -omega_y(k), -omega_z(k);
         0, 0, omega_z(k), -omega_y(k);
         0, 0, 0, omega_x(k);
         zeros(1,4)];
     S_omega = S_omega - S_omega';
+    %integration
     q(:,k+1) = (S_omega*dt/2 + eye(4))*q(:,k);
-    
+    % normalization
     q(:, k+1) = q(:, k+1)/norm(q(:, k+1));
 end
 
+% Measurements:
 for k=1:n
-    % Measurements:
-    % Magnetometer readings
+    % compute rotation matrix
     wRb = [q(1,k)^2 + q(2,k)^2 - q(3,k)^2 - q(4,k)^2, 2*q(3,k)*q(2,k) - 2*q(4,k)*q(1,k), 2*q(3,k)*q(1,k) + 2*q(4,k)*q(2,k);
         2*q(4,k)*q(1,k) + 2*q(3,k)*q(2,k), q(1,k)^2 - q(2,k)^2 + q(3,k)^2 - q(4,k)^2, -2*q(2,k)*q(1,k) + 2*q(4,k)*q(3,k);
         -2*q(3,k)*q(1,k) + 2*q(4,k)*q(2,k), 2*q(2,k)*q(1,k) + 2*q(4,k)*q(3,k), q(1,k)^2 - q(2,k)^2 - q(3,k)^2 + q(4,k)^2];
+    % Magnetometer readings in body frame
     m(:,k) = wRb'*mw;  
-    % Accelerometers readings
+    % Accelerometers readings in body frame
     a(:,k) = [-2*q(3,k)*q(1,k) + 2*q(4,k)*q(2,k);
                  2*q(2,k)*q(1,k) + 2*q(4,k)*q(3,k);
                  q(1,k)^2 - q(2,k)^2 - q(3,k)^2 + q(4,k)^2] * g + ...
-                [0; 0; -1] * a_M(k);
-%     % b - Magnetometer + accelerometer
-%     Zm = 2*q(4,k)*q(1,k) + 2*q(3,k)*q(2,k);
-%     % Overall
-%     Z(:,k) = [Za; Zm];
+                [0; 0; -1] * a_M(k); % add motor acceleration
 
-    % position
+    % position and velocity
     if(k>1)
         a_tmp = wRb*a(:,k);
         p(:,k) = p(:,k-1) + v(:,k-1)*dt + a_tmp(1:2)*dt^2/2;
@@ -74,65 +82,55 @@ for k=1:n
 end
 
 
+%% Corrupted measurements generation
 
-%% Gyroscope
+% -- Gyroscope
+mu_g = (rand(3,1) + rand(3,1).*sin(2*pi*t/100)*BiasScale); %bias
+sigma_mu_g = NoiseScale*rand(3,1)*BiasScale; %bias uncert
+Rbg = diag(sigma_mu_g.^2); %bias cov
 
-% GyroUnc
-mu_g = (rand(3,1) + rand(3,1).*sin(2*pi*t/100)*BiasScale);
-sigma_mu_g = NoiseScale*rand(3,1)*BiasScale;
-Rbg = diag(sigma_mu_g.^2);
+sigma_g = NoiseScale*rand(3,1); %meas uncert
+Rg = diag(sigma_g.^2); %meas cov
 
-sigma_g = NoiseScale*rand(3,1);
-Rg = diag(sigma_g.^2);
+% Noisy ang rates
+omega_bar = [omega_x; ...
+             omega_y; ...
+             omega_z] + mu_g + mvnrnd(zeros(1,3), Rbg+Rg, n)';
 
-% Measured velocities
-omega_bar = [omega_x; 
-             omega_y;
-             omega_z] ...
-            + randn(3, n).*(sigma_g*ones(1,n)) ...
-            + mu_g;% + randn(3, n).*(sigma_mu_g*ones(1,n));
+% -- Accelerometer
+mu_a = zeros(3,1); %bias
+% mu_a = (rand(3,1) + rand(3,1).*sin(2*pi*t/400)*BiasScale); %bias
+sigma_mu_a = zeros(3,1); %bias uncert
+% sigma_mu_a = NoiseScale*rand(3,1)*BiasScale; %bias uncert
+Rba =  diag(sigma_mu_a.^2); %bias cov
 
-
-%% Accelerometer
-% Uncertainties
-% mu_a = zeros(3,1);
-mu_a = (rand(3,1) + rand(3,1).*sin(2*pi*t/400)*BiasScale);
-sigma_mu_a = NoiseScale*rand(3,1)*BiasScale;
-Rba =  diag(sigma_mu_a.^2);
-
-sigma_a = NoiseScale*rand(3,1);
-Ra = diag(sigma_a.^2);
+sigma_a = NoiseScale*rand(3,1); %meas uncert
+Ra = diag(sigma_a.^2); %meas cov
 
 % Noisy measurements
-% a_bar = a + mvnrnd(mu_a, Ra, n)' + mvnrnd(zeros(3,1), Rba, n)';
-a_bar = a + randn(3, n).*(sigma_a*ones(1,n)) ...
-          + mu_a;% + randn(3, n).*(sigma_mu_a*ones(1,n));
+a_bar = a + mvnrnd(zeros(1,3), Rba+Ra, n)'; % use this for no bias
+% a_bar = a + mu_a + mvnrnd(zeros(3,1), Rba+Ra, n)';
 
-
-%% Magnetometer
-% Uncertainties
-mu_m = zeros(3,1);
-sigma_m = NoiseScale*rand(3,1);
-Rm = diag(sigma_m.^2);
+% -- Magnetometer
+mu_m = zeros(3,1); %bias
+sigma_m = NoiseScale*rand(1,3); %meas uncert
+Rm = diag(sigma_m.^2); %meas cov
+% In future: add calibration
 
 % Noisy measurements
 m_bar = m + mvnrnd(mu_m, Rm, n)';
 
-%% UWB
-% Uncertainties
-mu_uwb = zeros(2,1);
-sigma_uwb = NoiseScale*10*rand(2,1);
-Ruwb = diag(sigma_uwb.^2);
+% -- UWB
+mu_uwb = zeros(2,1); %bias
+sigma_uwb = NoiseScale*10*rand(2,1); %meas uncert
+Ruwb = diag(sigma_uwb.^2); %meas cov
 
 % Noisy measurements
 uwb = p + mvnrnd(mu_uwb, Ruwb, n)';
 
 %% Estimates
 
-% q_est = zeros(4, n);
-% b_est = zeros(3, n);
-% q_est(:,1) = q(:,1); %[1; 0; 0; 0];
-% b_est(:,1) = BiasScale*rand(3,1);
+% -- Initialization
 
 % state
 X = zeros(14,n);
@@ -159,16 +157,17 @@ B = [dt^2/2, 0;
      0,      dt^2/2;
      dt,     0;
      0,      dt];
-
+% measurements matrix
 H = [eye(4), zeros(4,3)];
 
-% variables to compute vel from uwb
+% variables to compute vel from uwb (to filter corrupted measurements)
 pos_buff_iter = 1;
 vel_iter = -1;
 pos_buff = zeros(2,2);
 update_pos = false;
 update_vel = false;
 
+% motor's acceleration estimates
 aM_est = zeros(1,length(t));
 
 for k=1:n-1

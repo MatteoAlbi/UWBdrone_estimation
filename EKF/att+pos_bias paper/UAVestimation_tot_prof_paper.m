@@ -28,10 +28,14 @@ a_M = g* 0.1 * (1 + sin(2*pi*t/7));
 % -- Variables initialization
 
 % Quaternions
-q = zeros(4,length(t));
+q = zeros(4,n);
 % q(:,1) = rand(1,4);
 % q(:,1) = q(:,1)/norm(q(:,1));
 q(:,1) = [0,0,0,1]; % initial state
+% DCM state
+dcm = zeros(3,n);
+tmp = quat2dcm(q(:,1)');
+dcm(:,1) = tmp(:,3);
 
 % Magnetometer
 mw = [rand(1); 0; rand(1)];
@@ -45,7 +49,7 @@ Z = zeros(4,n);
 p = zeros(2,n);
 v = zeros(2,n);
 
-% -- Quaternions dynamic
+% -- Quaternions dynamics
 for k=1:n-1
     % rotation
     S_omega = [0, -omega_x(k), -omega_y(k), -omega_z(k);
@@ -57,6 +61,8 @@ for k=1:n-1
     q(:,k+1) = (S_omega*dt/2 + eye(4))*q(:,k);
     % normalization
     q(:, k+1) = q(:, k+1)/norm(q(:, k+1));
+    tmp = quat2dcm(q(:,k+1)');
+    dcm(:,k+1) = tmp(:,3);
 end
 
 % -- Measurements:
@@ -132,14 +138,23 @@ uwb = p + mvnrnd(mu_uwb, Ruwb, n)';
 
 % -- Initialization
 
-% attitude
-X_att = zeros(7,n);
-X_att(1:4,1) = q(:,1); % correct initial attitude
-X_att(5:7,1) = mu_g(:,1); % correct initial gyro bias estimate
+% -- Ext acc detection and estimation
+alpha = zeros(t,1);
+threshold_acc = 0.1;
+ca_const = 0.5;
+ca = ca_const;
 
-P_att = diag([NoiseScale*ones(1,4), ...
-              sigma_mu_g']); % attitude, gyro_bias estimate cov
-Innovation_att = zeros(4, n); % attitude innovation
+% attitude state
+dcm_est = zeros(3,n);
+dcm_est(:,1) = dcm(:,1);
+P_dcm = diag(NoiseScale*ones(1,3)); % attitude estimate cov
+Innovation_dcm = zeros(3, n); % attitude innovation
+
+% gyro bias
+mu_g_est = zeros(3,n);
+mu_g_est(:,1) = mu_g(:,1);
+P_mu_g = diag(sigma_mu_g'); % gyro_bias estimate cov
+Innovation_mu_g = zeros(3, n); % gyro_bias innovation
 
 % position
 X_pos = zeros(7,n);
@@ -172,38 +187,29 @@ update_pos = false;
 update_vel = false;
 
 % motor's acceleration estimates
-aM_est = zeros(1,length(t));
+aM_est = zeros(1,n);
 
 %% KF loop
 
-for k=1:n-1
+for k=2:n-1
+    % -- EXT ACC DETECTION
+    % uses simple threshold check
+    if abs(sum(a_bar(:,k-1)/norm(a_bar(:,k-1))) - g) > threshold_acc
+        alpha(k-1) = 1;
+        ca = ca_const;
+    else
+        alpha(k-1) = 0;
+        ca = ca_const/2;
+    end
+
     % -- ATTITUDE
-    % -- Prediction
-    omega_no_bias = omega_bar(:,k) - X_att(5:7,k);
-    S_omega = [0, -omega_no_bias(1), -omega_no_bias(2), -omega_no_bias(3);
-        0, 0, omega_no_bias(3), -omega_no_bias(2);
-        0, 0, 0, omega_no_bias(1);
-        zeros(1,4)];
-    S_omega = S_omega - S_omega';
-
-    X_att(1:4, k+1) = (S_omega*dt/2 + eye(4))*X_att(1:4, k);
-    X_att(1:4, k+1) = X_att(1:4, k+1)/norm(X_att(1:4, k+1));
-    X_att(5:7, k+1) = X_att(5:7, k);
+    yG_star = omega_bar(:,k-1) - mu_g_est(:,k-1);
+    Phi = eye(3) - dt*cross_prod_matrix(yG_star);
     
-    % Covariance of the prediction
-    Gatt = [-X_att(2,k), -X_att(3,k), -X_att(4,k);
-        X_att(1,k), -X_att(4,k), X_att(3,k);
-        X_att(4,k), X_att(1,k), -X_att(2,k);
-        -X_att(3,k), X_att(2,k), X_att(1,k)]*dt/2;
-
-    J_Gatt = [ Gatt;
-            zeros(3,3)];
-    J_Batt = [ Gatt;
-            eye(3,3)];
-    J_Xatt = [ S_omega*dt/2 + eye(4), -Gatt;
-            zeros(3,4),eye(3,3)];
-
-    P_att = J_Xatt*P_att*J_Xatt' + J_Gatt*Rg*J_Gatt' + J_Batt*Rbg*J_Batt';
+    % -- Prediction
+    dcm_est(:,k) = Phi*dcm_est(:,k-1);
+    dcm_tilde = cross_prod_matrix(dcm_est(:,k-1));
+    P_dcm(:,k) = Phi*P_dcm*Phi' - dt^2*dcm_tilde*(Rg + Rbg)*dcm_tilde';
     
     % -- Update
     % Split acc contributions

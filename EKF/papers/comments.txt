@@ -1,0 +1,35 @@
+Accelerometer_Calibration_and_Dynamic_Bias_and_Gravity_Estimation_Analysis_Design_and_Experimental_Evaluation2011
+- to be read
+
+Attitude_estimation_for_UAV_using_extended_Kalman_filter2017
+- full EKF derivation with equation
+- 2nd order taylor expasion (not linear?)
+
+Cascaded_Kalman_Filtering-Based_Attitude_and_Gyro_Bias_Estimation_With_Efficient_Compensation_of_External_Accelerations2020
+- DCM based
+- prof paper
+- gyro bias
+- ext acc detection with clustering on mean, var and max over time window
+- ext acc estimation using first order low pass dynamic
+- gyro bias using independent kalman filter
+- also yaw angle
+
+Estimation_of_Attitude_and_External_Acceleration_Using_Inertial_Sensor_Measurement_During_Various_Dynamic_Conditions2012
+- similar to prof paper
+- externatl acc estimation using similar approach
+- ext acc detection using threshold
+
+Orientation_Estimation_Using_a_Quaternion-Based_Indirect_Kalman_Filter_With_Adaptive_Estimation_of_External_Acceleration2010
+- quaternion based
+- indirect filter: compute errors to later derive the estimate
+- add small noise to bias state to ensure updating
+- quaternion integration approximated with 3rd order equation
+- external acc estimation using residuals
+
+Two_step_cascade_KF_for_external_acc_compensatoion_2006
+- ext acc detection using threshold
+- ext acc compenstaion (no estimation) setting different cov matrix for accelerometer
+
+UAV_Attitude_Estimation_Using_Unscented_Kalman_Filter_and_TRIAD2012
+- to be read (not yet using an UKF)
+

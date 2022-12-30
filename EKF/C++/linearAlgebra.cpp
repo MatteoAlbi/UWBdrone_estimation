@@ -210,7 +210,7 @@ void Matrix::operator/=(const Matrix & m){
     try
     {
         if(m.getC() == m.getR()) inv = m.inv();
-        else inv = m.pinv();
+        else inv = m.pinv_left();
     }
     catch(const std::exception& e)
     {
@@ -466,7 +466,7 @@ Matrix Matrix::inv() const{
     return this->adj().t() / det;
 }
 
-Matrix Matrix::pinv() const{
+Matrix Matrix::pinv_left() const{
     try{
         return (this->t() * (*this)).inv() * this->t();
     }
@@ -677,7 +677,7 @@ Matrix operator/(const Matrix& m1, const Matrix& m2){
     try
     {
         if(m2.getC() == m2.getR()) inv = m2.inv();
-        else inv = m2.pinv();
+        else inv = m2.pinv_left();
     }
     catch(const std::exception& e)
     {
