@@ -135,7 +135,7 @@ uwb = p + mvnrnd(mu_uwb, Ruwb, n)';
 % attitude
 X_att = zeros(7,n);
 X_att(1:4,1) = q(:,1); % correct initial attitude
-X_att(5:7,1) = mu_g(:,1); % correct initial gyro bias estimate
+X_att(5:7,1) = mu_g(:,1) +  rand(3,1); % correct initial gyro bias estimate
 
 P_att = diag([NoiseScale*ones(1,4), ...
               sigma_mu_g']); % attitude, gyro_bias estimate cov
