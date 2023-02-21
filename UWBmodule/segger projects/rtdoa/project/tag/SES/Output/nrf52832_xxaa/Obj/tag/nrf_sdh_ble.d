@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/nrf_sdh_ble.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\softdevice\common\nrf_sdh_ble.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\softdevice\common\nrf_sdh_ble.c \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdint.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdbool.h \
@@ -26,7 +26,7 @@ Output/nrf52832_xxaa/Obj/tag/nrf_sdh_ble.o: \
  ../../../nRF5_SDK_14.2.0/components/device/nrf52_name_change.h \
  ../../../nRF5_SDK_14.2.0/components/device/compiler_abstraction.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_macros.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\softdevice\common\nrf_sdh_ble.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\softdevice\common\nrf_sdh_ble.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util.h \
  ../../../nRF5_SDK_14.2.0/components/softdevice/s132/headers/ble.h \
  ../../../nRF5_SDK_14.2.0/components/softdevice/s132/headers/nrf_svc.h \
@@ -48,7 +48,7 @@ Output/nrf52832_xxaa/Obj/tag/nrf_sdh_ble.o: \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdio.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error_weak.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_errors.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\softdevice\common\nrf_sdh.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\softdevice\common\nrf_sdh.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/strerror/nrf_strerror.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/experimental_log/nrf_log.h \

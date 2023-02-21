@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/nrf_drv_clock.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\drivers_nrf\clock\nrf_drv_clock.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\drivers_nrf\clock\nrf_drv_clock.c \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdint.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdbool.h \
@@ -26,7 +26,7 @@ Output/nrf52832_xxaa/Obj/tag/nrf_drv_clock.o: \
  ../../../nRF5_SDK_14.2.0/components/device/nrf52_name_change.h \
  ../../../nRF5_SDK_14.2.0/components/device/compiler_abstraction.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_macros.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\drivers_nrf\clock\nrf_drv_clock.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\drivers_nrf\clock\nrf_drv_clock.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_errors.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nrf_assert.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \

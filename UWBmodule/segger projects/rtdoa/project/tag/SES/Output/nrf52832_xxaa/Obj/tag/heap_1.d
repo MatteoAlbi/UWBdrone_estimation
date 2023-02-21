@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/heap_1.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\external\freertos\source\portable\MemMang\heap_1.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\external\freertos\source\portable\MemMang\heap_1.c \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdlib.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/__crossworks.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/FreeRTOS.h \

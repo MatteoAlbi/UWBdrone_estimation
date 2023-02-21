@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/main.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\project\tag\SES\main.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\project\tag\SES\main.c \
  ../../common/config.h ../../../deca_driver/deca_device_api.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/FreeRTOS.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stddef.h \
@@ -54,7 +54,7 @@ Output/nrf52832_xxaa/Obj/tag/main.o: \
  ../../../boards/dw1001_dev.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/button/app_button.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \
- E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/project/UWBmodule/rtdoa/project/tag/SES/BLE/os_ble.h \
+ E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/UWBdrone_estimation/UWBmodule/segger\ projects/rtdoa/project/tag/SES/BLE/os_ble.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/semphr.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/queue.h \
  ../../../deca_driver/port/port_platform.h \
@@ -74,6 +74,6 @@ Output/nrf52832_xxaa/Obj/tag/main.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_macros.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/experimental_section_vars/nrf_section.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/experimental_log/src/nrf_log_internal.h \
- E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/project/UWBmodule/rtdoa/project/tag/SES/UART/UART.h \
- E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/project/UWBmodule/rtdoa/project/tag/SES/TWI/TWI.h \
- E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/project/UWBmodule/rtdoa/project/tag/SES/LIS2DH12/LIS2DH12.h
+ E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/UWBdrone_estimation/UWBmodule/segger\ projects/rtdoa/project/tag/SES/UART/UART.h \
+ E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/UWBdrone_estimation/UWBmodule/segger\ projects/rtdoa/project/tag/SES/TWI/TWI.h \
+ E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/UWBdrone_estimation/UWBmodule/segger\ projects/rtdoa/project/tag/SES/LIS2DH12/LIS2DH12.h

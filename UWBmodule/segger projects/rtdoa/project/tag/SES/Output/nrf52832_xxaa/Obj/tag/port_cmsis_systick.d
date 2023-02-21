@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/port_cmsis_systick.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\external\freertos\portable\CMSIS\nrf52\port_cmsis_systick.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\external\freertos\portable\CMSIS\nrf52\port_cmsis_systick.c \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/FreeRTOS.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stddef.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/__crossworks.h \

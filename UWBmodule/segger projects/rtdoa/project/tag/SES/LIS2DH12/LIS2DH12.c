@@ -24,6 +24,7 @@
 // Blue LED toggles between FIFO sample intervals
 #define	BLUE_LED	BSP_BOARD_LED_1
 #define	GREEN_LED	BSP_BOARD_LED_0
+#define debugOn
 
 // FIFO element
 struct sFifoXYZelement
@@ -438,7 +439,7 @@ void vLIS2_EnableBypass (void)
 	boInterruptEvent = false;
 
   // Enable X,Y,Z sensors and set a default sample rate
-	vTWI_Write(CTRL_REG1, (ODR_10Hz | X_EN | Y_EN | Z_EN));
+	vTWI_Write(CTRL_REG1, (ODR_50Hz | X_EN | Y_EN | Z_EN));
                               //sample rate
 	
 	// Disable high-pass filtering
@@ -454,6 +455,10 @@ void vLIS2_EnableBypass (void)
 	vTWI_Write(FIFO_CTRL_REG, BYPASS);
 	uint8_t u8Dummy;
 	vTWI_Read(FIFO_SRC_REG, &u8Dummy);
+#ifdef debugOn
+        vTWI_Read(CTRL_REG1, &u8Dummy);
+        printf("CTRL_REG1: 0x%x\r\n", u8Dummy);
+#endif
 }
 
 /*!
@@ -501,7 +506,7 @@ void vLIS2_TaskBypass (void)
         }
           
         // Print to UART most recent data
-        printf("%d %d %d\n",
+        printf("%d %d %d\r\n",
                     ((int16_t)accDataBypass.u16_X) / (1 << u8SignExtend),
                     ((int16_t)accDataBypass.u16_Y) / (1 << u8SignExtend),
                     ((int16_t)accDataBypass.u16_Z) / (1 << u8SignExtend)

@@ -46,8 +46,9 @@ void mainTask() {
 
   while (1) {
 
-    tag_tdoa_run();
-
+    //tag_tdoa_run();
+    vLIS2_TaskBypass();
+    nrf_delay_ms(1000);
 
   }
 
@@ -93,10 +94,10 @@ void acc_twi_setup(void){
   vLIS2_Init();
 #ifdef debugOn
   // printf appears from nRF52 UART on RPi interface pins
-  printf("Accel test running\n");
+  printf("Accel test running\r\n");
   // Check the TWI and acceleromter are talking
   uint8_t u8ID = u8LIS2_TestRead();
-  printf("LIS2DH12 - Who am I code:%x\n", u8ID);
+  printf("LIS2DH12 - Who am I code:%x\r\n", u8ID);
 #endif
   // Set accelerometer to bypass mode
   vLIS2_EnableBypass();

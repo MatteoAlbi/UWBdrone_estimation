@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/app_timer_freertos.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\libraries\timer\app_timer_freertos.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\libraries\timer\app_timer_freertos.c \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdint.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdbool.h \

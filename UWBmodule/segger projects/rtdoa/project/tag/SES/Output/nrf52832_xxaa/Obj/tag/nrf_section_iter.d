@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/nrf_section_iter.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\libraries\experimental_section_vars\nrf_section_iter.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\libraries\experimental_section_vars\nrf_section_iter.c \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdint.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdbool.h \
@@ -26,8 +26,8 @@ Output/nrf52832_xxaa/Obj/tag/nrf_section_iter.o: \
  ../../../nRF5_SDK_14.2.0/components/device/nrf52_name_change.h \
  ../../../nRF5_SDK_14.2.0/components/device/compiler_abstraction.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_macros.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\libraries\experimental_section_vars\nrf_section_iter.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\libraries\experimental_section_vars\nrf_section.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\libraries\experimental_section_vars\nrf_section_iter.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\libraries\experimental_section_vars\nrf_section.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nordic_common.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nrf_assert.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \

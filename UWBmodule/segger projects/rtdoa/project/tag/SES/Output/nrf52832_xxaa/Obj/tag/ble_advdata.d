@@ -1,6 +1,6 @@
 Output/nrf52832_xxaa/Obj/tag/ble_advdata.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\ble\common\ble_advdata.c \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\ble\common\ble_advdata.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\ble\common\ble_advdata.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\ble\common\ble_advdata.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdint.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdbool.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/string.h \
@@ -34,7 +34,7 @@ Output/nrf52832_xxaa/Obj/tag/ble_advdata.o: \
  ../../../nRF5_SDK_14.2.0/components/device/compiler_abstraction.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nordic_common.h \
  ../../../nRF5_SDK_14.2.0/components/softdevice/s132/headers/ble_gap.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\ble\common\ble_srv_common.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\ble\common\ble_srv_common.h \
  ../../../nRF5_SDK_14.2.0/components/softdevice/s132/headers/ble_types.h \
  ../../../nRF5_SDK_14.2.0/components/softdevice/s132/headers/ble_gatt.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \

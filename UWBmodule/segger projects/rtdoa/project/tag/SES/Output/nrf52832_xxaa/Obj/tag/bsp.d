@@ -1,6 +1,6 @@
 Output/nrf52832_xxaa/Obj/tag/bsp.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\libraries\bsp\bsp.c \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\libraries\bsp\bsp.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\libraries\bsp\bsp.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\libraries\bsp\bsp.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdint.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdbool.h \
  ../../../nRF5_SDK_14.2.0/components/boards/boards.h \
@@ -34,7 +34,7 @@ Output/nrf52832_xxaa/Obj/tag/bsp.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stddef.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nordic_common.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\components\libraries\bsp\bsp_config.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\components\libraries\bsp\bsp_config.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util.h \
  ../../../nRF5_SDK_14.2.0/components/device/compiler_abstraction.h

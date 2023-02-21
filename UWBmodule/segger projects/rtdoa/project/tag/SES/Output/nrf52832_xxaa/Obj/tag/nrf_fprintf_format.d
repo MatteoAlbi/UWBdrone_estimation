@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/nrf_fprintf_format.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\external\fprintf\nrf_fprintf_format.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\external\fprintf\nrf_fprintf_format.c \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdint.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdbool.h \
@@ -31,5 +31,5 @@ Output/nrf52832_xxaa/Obj/tag/nrf_fprintf_format.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdio.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error_weak.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\external\fprintf\nrf_fprintf.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\external\fprintf\nrf_fprintf_format.h
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\external\fprintf\nrf_fprintf.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\external\fprintf\nrf_fprintf_format.h

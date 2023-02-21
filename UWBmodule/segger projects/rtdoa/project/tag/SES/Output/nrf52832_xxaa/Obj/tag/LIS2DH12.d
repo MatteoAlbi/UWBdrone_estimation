@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/LIS2DH12.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\project\tag\SES\LIS2DH12\LIS2DH12.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\project\tag\SES\LIS2DH12\LIS2DH12.c \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdio.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/__crossworks.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util_platform.h \
@@ -41,9 +41,9 @@ Output/nrf52832_xxaa/Obj/tag/LIS2DH12.o: \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdlib.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_errors.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/delay/nrf_delay.h \
- E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/project/UWBmodule/rtdoa/project/tag/SES/TWI/TWI.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\project\tag\SES\LIS2DH12\LIS2DH12.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\project\tag\SES\LIS2DH12\LIS2DH12registers.h \
+ E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/UWBdrone_estimation/UWBmodule/segger\ projects/rtdoa/project/tag/SES/TWI/TWI.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\project\tag\SES\LIS2DH12\LIS2DH12.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\project\tag\SES\LIS2DH12\LIS2DH12registers.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/bsp/bsp.h \
  ../../../nRF5_SDK_14.2.0/components/boards/boards.h \
  ../../../boards/dw1001_dev.h \

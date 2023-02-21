@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/TDOA.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\project\tag\SES\TDOA\TDOA.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\project\tag\SES\TDOA\TDOA.c \
  ../../common/config.h ../../../deca_driver/deca_device_api.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/FreeRTOS.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stddef.h \
@@ -43,7 +43,7 @@ Output/nrf52832_xxaa/Obj/tag/TDOA.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/mpu_wrappers.h \
  ../../../deca_driver/deca_regs.h ../../../deca_driver/deca_version.h \
- E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/project/UWBmodule/rtdoa/project/tag/SES/BLE/os_ble.h \
+ E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/UWBdrone_estimation/UWBmodule/segger\ projects/rtdoa/project/tag/SES/BLE/os_ble.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/semphr.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/queue.h \
  ../../../deca_driver/port/port_platform.h \
@@ -73,7 +73,7 @@ Output/nrf52832_xxaa/Obj/tag/TDOA.o: \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/timers.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/task.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/list.h \
- E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/project/UWBmodule/rtdoa/project/tag/SES/RTDOA_EST/rTDoA_est.h \
+ E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/UWBdrone_estimation/UWBmodule/segger\ projects/rtdoa/project/tag/SES/RTDOA_EST/rTDoA_est.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/math.h \
- E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/project/UWBmodule/rtdoa/project/tag/SES/LIN_ALG/linearAlgebra.h \
- E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/project/UWBmodule/rtdoa/project/tag/SES/LIS2DH12/LIS2DH12.h
+ E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/UWBdrone_estimation/UWBmodule/segger\ projects/rtdoa/project/tag/SES/LIN_ALG/linearAlgebra.h \
+ E:/matte/Documents/uni/master\ EIT/1st\ year/2nd\ semester/UV/UWBdrone_estimation/UWBmodule/segger\ projects/rtdoa/project/tag/SES/LIS2DH12/LIS2DH12.h

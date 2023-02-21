@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/tag/TWI.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\project\tag\SES\TWI\TWI.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\project\tag\SES\TWI\TWI.c \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdio.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/__crossworks.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util_platform.h \
@@ -49,4 +49,4 @@ Output/nrf52832_xxaa/Obj/tag/TWI.o: \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/hal/nrf_gpio.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nrf_assert.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdlib.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\project\tag\SES\TWI\TWI.h
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\project\tag\SES\TWI\TWI.h

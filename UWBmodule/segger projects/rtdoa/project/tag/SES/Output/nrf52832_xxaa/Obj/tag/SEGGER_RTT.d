@@ -1,7 +1,7 @@
 Output/nrf52832_xxaa/Obj/tag/SEGGER_RTT.o: \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\external\segger_rtt\SEGGER_RTT.c \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\external\segger_rtt\SEGGER_RTT.h \
- E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\project\UWBmodule\rtdoa\nRF5_SDK_14.2.0\external\segger_rtt\SEGGER_RTT_Conf.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\external\segger_rtt\SEGGER_RTT.c \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\external\segger_rtt\SEGGER_RTT.h \
+ E:\matte\Documents\uni\master\ EIT\1st\ year\2nd\ semester\UV\UWBdrone_estimation\UWBmodule\segger\ projects\rtdoa\nRF5_SDK_14.2.0\external\segger_rtt\SEGGER_RTT_Conf.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nordic_common.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util_platform.h \
  E:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.70a/include/stdint.h \

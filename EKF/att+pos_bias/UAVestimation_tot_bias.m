@@ -18,9 +18,9 @@ n = length(t);
 % -- Input variables
 
 % Input angular velocity
-omega_x = 0.1*sin(2*pi*t/10);
-omega_y = 0.2*cos(2*pi*t/4);
-omega_z = 0.4*sin(2*pi*t/3);
+omega_x = zeros(1,n);%0.1*sin(2*pi*t/10);
+omega_y = zeros(1,n);%0.2*cos(2*pi*t/4);
+omega_z = 0.5*ones(1,n);%0.4*sin(2*pi*t/3);
 
 % Input motor acceleration
 a_M = g* 0.1 * (1 + sin(2*pi*t/7));
@@ -71,7 +71,7 @@ for k=1:n
     a(:,k) = [-2*q(3,k)*q(1,k) + 2*q(4,k)*q(2,k);
                  2*q(2,k)*q(1,k) + 2*q(4,k)*q(3,k);
                  q(1,k)^2 - q(2,k)^2 - q(3,k)^2 + q(4,k)^2] * g + ...
-                [0; 0; -1] * a_M(k); % add motor acceleration
+                [0; 0; 0] * a_M(k); % add motor acceleration
 
     % position and velocity
     if(k>1)
@@ -105,7 +105,7 @@ sigma_mu_a = zeros(3,1); %bias uncert
 Rba =  diag(sigma_mu_a.^2); %bias cov
 
 sigma_a = NoiseScale*rand(3,1); %meas uncert
-Ra = diag(sigma_a.^2); %meas cov
+Ra = diag(sigma_a.^2)*g; %meas cov
 
 % Noisy measurements
 a_bar = a + mvnrnd(zeros(1,3), Rba+Ra, n)'; % use this for no bias
@@ -135,7 +135,7 @@ uwb = p + mvnrnd(mu_uwb, Ruwb, n)';
 % attitude
 X_att = zeros(7,n);
 X_att(1:4,1) = q(:,1); % correct initial attitude
-X_att(5:7,1) = mu_g(:,1) +  rand(3,1); % correct initial gyro bias estimate
+X_att(5:7,1) = mu_g(:,1) +  rand(3,1)*BiasScale; % correct initial gyro bias estimate
 
 P_att = diag([NoiseScale*ones(1,4), ...
               sigma_mu_g']); % attitude, gyro_bias estimate cov
@@ -179,7 +179,7 @@ aM_est = zeros(1,length(t));
 for k=1:n-1
     % -- ATTITUDE
     % -- Prediction
-    omega_no_bias = omega_bar(:,k) - X_att(5:7,k);
+    omega_no_bias = omega_bar(:,k+1) - X_att(5:7,k);
     S_omega = [0, -omega_no_bias(1), -omega_no_bias(2), -omega_no_bias(3);
         0, 0, omega_no_bias(3), -omega_no_bias(2);
         0, 0, 0, omega_no_bias(1);
@@ -190,6 +190,11 @@ for k=1:n-1
     X_att(1:4, k+1) = X_att(1:4, k+1)/norm(X_att(1:4, k+1));
     X_att(5:7, k+1) = X_att(5:7, k);
     
+    % ensure 1st component of quaternion is positive
+    if X_att(1) < 0
+        X_att(1:4) = -X_att(1:4);
+    end
+    
     % Covariance of the prediction
     Gatt = [-X_att(2,k), -X_att(3,k), -X_att(4,k);
         X_att(1,k), -X_att(4,k), X_att(3,k);
@@ -198,7 +203,9 @@ for k=1:n-1
 
     J_Gatt = [ Gatt;
             zeros(3,3)];
-    J_Batt = [ Gatt;
+    J_Batt = [ 
+            %zeros(4,3);
+            -Gatt;
             eye(3,3)];
     J_Xatt = [ S_omega*dt/2 + eye(4), -Gatt;
             zeros(3,4),eye(3,3)];
@@ -213,6 +220,12 @@ for k=1:n-1
                         X_pos(5:7,k), ...
                         Ra, ...
                         P_pos(5:7,5:7));
+
+%     aG = a_bar(:,k+1)/g;
+%     RaG = Ra/(g^2);
+%     aG = aG/norm(aG);
+%     J_A = J_normalization(aG);
+%     RaG = J_A*RaG*J_A';
     
     % Magnetomter + Accelerometer measurements
     % Normalization
@@ -220,6 +233,7 @@ for k=1:n-1
     m_n = m_bar(:,k+1)/m_bar_mod;
     J_M = J_normalization(m_bar(:,k+1));
     Rmn = J_M*Rm*J_M';    
+%     Rmn = Rm;
 
     % TRIAD algorithm
     mD = sum(aG.*m_n);
@@ -247,7 +261,7 @@ for k=1:n-1
     X_att(1, k+1)^2 - X_att(2, k+1)^2 - X_att(3, k+1)^2 + X_att(4, k+1)^2;
     2*X_att(4, k+1)*X_att(1, k+1) + 2*X_att(3, k+1)*X_att(2, k+1)];
     
-    % linearized 
+    % linearized measurement mapping
     J_H = zeros(4,7);
     J_H(1:4,1:4) = 2*...
       [-X_att(3,k+1), X_att(4,k+1), -X_att(1,k+1), X_att(2,k+1);
@@ -264,6 +278,11 @@ for k=1:n-1
     P_att = (eye(7) - W_att*J_H) * P_att;
 
     X_att(1:4, k+1) = X_att(1:4, k+1)/norm(X_att(1:4, k+1)); 
+
+    % ensure 1st component of quaternion is positive
+    if X_att(1) < 0
+        X_att(1:4) = -X_att(1:4);
+    end
 
     % -- POSITION
     [aW, J_Xpos, J_Upos, aM_est(k+1)] = func_aW(X_att(1:4, k+1), a_bar(:,k+1), X_pos(5:7,k), dt, A);
@@ -330,8 +349,17 @@ for k=1:n-1
 end
 
 
-%% Plots
+eul = zeros(3,n);
+eul_est = zeros(3,n);
+for i=1:n
+    eul(:,i) = quat_to_eul(q(:,i));
+    eul_est(:,i) = quat_to_eul(X_att(1:4,i));
+end
 
+eul_correct = quat2eul(q.').' * 180/pi;
+
+
+%% Plots
 FigID = 0;
 
 % FigID = FigID + 1;
@@ -345,14 +373,14 @@ FigID = 0;
 
 FigID = FigID + 1;
 figure(FigID), clf, hold on;
-plot(t, q(1,:));
-plot(t, q(2,:));
-plot(t, q(3,:));
-plot(t, q(4,:));
-plot(t, X_att(1,:));
-plot(t, X_att(2,:));
-plot(t, X_att(3,:));
-plot(t, X_att(4,:));
+plot(t, q(1,:), 'LineWidth', 1.5);
+plot(t, q(2,:), 'LineWidth', 1.5);
+plot(t, q(3,:), 'LineWidth', 1.5);
+plot(t, q(4,:), 'LineWidth', 1.5);
+plot(t, X_att(1,:), 'LineWidth', 1.5);
+plot(t, X_att(2,:), 'LineWidth', 1.5);
+plot(t, X_att(3,:), 'LineWidth', 1.5);
+plot(t, X_att(4,:), 'LineWidth', 1.5);
 legend('q_0', 'q_1', 'qe_2', 'q_3', 'qe_0', 'qe_1', 'qe_2', 'qe_3', 'Location', 'best');
 xlabel('t [s]');
 title("attitude");
@@ -383,57 +411,86 @@ title("gyro bias");
 
 FigID = FigID + 1;
 figure(FigID), clf, hold on;
-plot(t, p(1,:));
-plot(t, p(2,:));
-plot(t, X_pos(1,:));
-plot(t, X_pos(2,:));
-plot(t, uwb(1,:));
-plot(t, uwb(2,:));
-legend('pos_x', 'pos_y', 'pos_x_est', 'pos_y_est', 'uwb_x', 'uwb_y', 'Location', 'best');
+plot(t, eul(1,:)-eul_est(1,:));
+plot(t, eul(2,:)-eul_est(2,:));
+plot(t, eul(3,:)-eul_est(3,:));
+legend('x_err', 'y_err', 'z_err', 'Location', 'best');
 xlabel('t [s]');
-title("position");
+title("Euler ang error");
 
 FigID = FigID + 1;
 figure(FigID), clf, hold on;
-plot(t, v(1,:));
-plot(t, v(2,:));
-plot(t, X_pos(3,:));
-plot(t, X_pos(4,:));
-legend('vel_x', 'vel_y', 'vel_x_est', 'vel_y_est', 'Location', 'best');
+plot(t, eul_est(1,:));
+plot(t, eul_est(2,:));
+plot(t, eul_est(3,:));
+legend('x', 'y', 'z', 'Location', 'best');
 xlabel('t [s]');
-title("velocity");
+title("Estimated euler angles");
 
-FigID = FigID + 1;
-figure(FigID), clf, hold on;
-plot(t, abs(p(1,:) - X_pos(1,:)));
-plot(t, abs(p(2,:) - X_pos(2,:)));
-plot(t, abs(v(1,:) - X_pos(3,:)));
-plot(t, abs(v(2,:) - X_pos(4,:)));
-legend('e_p_x', 'e_p_y', 'e_v_x', 'e_v_y', 'Location', 'best');
-xlabel('t [s]');
-ylabel('Absolute errors');
-set(gca, 'YScale', 'log');
-title("position and velocity estimation error");
+% FigID = FigID + 1;
+% figure(FigID), clf, hold on;
+% plot(t, abs(mu_g(1,:) - X_att(5,:)));
+% plot(t, abs(mu_g(2,:) - X_att(6,:)));
+% plot(t, abs(mu_g(3,:) - X_att(7,:)));
+% legend('e_x', 'e_y', 'e_z', 'Location', 'best');
+% xlabel('t [s]');
+% ylabel('Absolute errors');
+% set(gca, 'YScale', 'log');
+% title("gyro bias estimation error");
 
-FigID = FigID + 1;
-figure(FigID), clf, hold on;
-plot(t, mu_a(1,:));
-plot(t, mu_a(2,:));
-plot(t, mu_a(3,:));
-plot(t, X_pos(5,:));
-plot(t, X_pos(6,:));
-plot(t, X_pos(7,:));
-legend('mu_a_x', 'mu_a_y', 'mu_a_z', 'mu_a_x_est', 'mu_a_y_est', 'mu_a_z_est', 'Location', 'best');
-xlabel('t [s]');
-title("acc bias");
+% FigID = FigID + 1;
+% figure(FigID), clf, hold on;
+% plot(t, p(1,:));
+% plot(t, p(2,:));
+% plot(t, X_pos(1,:));
+% plot(t, X_pos(2,:));
+% plot(t, uwb(1,:));
+% plot(t, uwb(2,:));
+% legend('pos_x', 'pos_y', 'pos_x_est', 'pos_y_est', 'uwb_x', 'uwb_y', 'Location', 'best');
+% xlabel('t [s]');
+% title("position");
 
-FigID = FigID + 1;
-figure(FigID), clf, hold on;
-plot(t, a_M(:));
-plot(t, aM_est(:));
-legend('a_M', 'a_M_est', 'Location', 'best');
-xlabel('t [s]');
-title("Motor trust");
+% FigID = FigID + 1;
+% figure(FigID), clf, hold on;
+% plot(t, v(1,:));
+% plot(t, v(2,:));
+% plot(t, X_pos(3,:));
+% plot(t, X_pos(4,:));
+% legend('vel_x', 'vel_y', 'vel_x_est', 'vel_y_est', 'Location', 'best');
+% xlabel('t [s]');
+% title("velocity");
+
+% FigID = FigID + 1;
+% figure(FigID), clf, hold on;
+% plot(t, abs(p(1,:) - X_pos(1,:)));
+% plot(t, abs(p(2,:) - X_pos(2,:)));
+% plot(t, abs(v(1,:) - X_pos(3,:)));
+% plot(t, abs(v(2,:) - X_pos(4,:)));
+% legend('e_p_x', 'e_p_y', 'e_v_x', 'e_v_y', 'Location', 'best');
+% xlabel('t [s]');
+% ylabel('Absolute errors');
+% set(gca, 'YScale', 'log');
+% title("position and velocity estimation error");
+
+% FigID = FigID + 1;
+% figure(FigID), clf, hold on;
+% plot(t, mu_a(1,:));
+% plot(t, mu_a(2,:));
+% plot(t, mu_a(3,:));
+% plot(t, X_pos(5,:));
+% plot(t, X_pos(6,:));
+% plot(t, X_pos(7,:));
+% legend('mu_a_x', 'mu_a_y', 'mu_a_z', 'mu_a_x_est', 'mu_a_y_est', 'mu_a_z_est', 'Location', 'best');
+% xlabel('t [s]');
+% title("acc bias");
+
+% FigID = FigID + 1;
+% figure(FigID), clf, hold on;
+% plot(t, a_M(:));
+% plot(t, aM_est(:));
+% legend('a_M', 'a_M_est', 'Location', 'best');
+% xlabel('t [s]');
+% title("Motor trust");
 
 % FigID = FigID + 1;
 % figure(FigID), clf, hold on;
@@ -462,3 +519,5 @@ title("Motor trust");
 % legend('uwb_x', 'uwb_y', 'Location', 'best');
 % xlabel('t [s]');
 % title('UWB');
+
+eul_correct = quat2eul(q');

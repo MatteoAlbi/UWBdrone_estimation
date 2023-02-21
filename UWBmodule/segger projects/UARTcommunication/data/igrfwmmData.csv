@@ -1,0 +1,22 @@
+############################################################
+#              Magnetic Field Components
+############################################################
+#   8 Fields
+#     (1) Date in decimal years
+#     (2) Declination in decimal degrees
+#     (3) Inclination in decimal degrees
+#     (4) Horintensity in nanoTesla (nT)
+#     (5) Totalintensity in nanoTesla (nT)
+#     (6) Xcomponent in nanoTesla (nT)
+#     (7) Ycomponent in nanoTesla (nT)
+#     (8) Zcomponent in nanoTesla (nT)
+# NOTE: The first row is change per year in degrees or nanoTesla (nT);
+# NOTE: The second row is uncertainty in degrees or nanoTesla (nT):
+#
+#   Magnetic Model: WMM-2020 (calculator version 0.5.1.11)
+#   Elevation: 0.00000 km Mean Sea Level
+#   Latitude: 46.06778 degrees, Longitude: 11.15028 degrees (Via Sommarive, 9, 38123 Povo TN)
+############################################################
+change/year,0.15161,0.02224,8.8,54.7,4.9,59.3,57.1
+uncertainty,0.36,0.21,128.0,145.0,131.0,94.0,157.0
+2023.08493,3.79138,62.418,22241.2,48035.4,22192.6,1470.7,42576.1
