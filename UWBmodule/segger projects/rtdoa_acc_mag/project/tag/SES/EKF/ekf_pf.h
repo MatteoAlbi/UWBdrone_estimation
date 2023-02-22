@@ -32,9 +32,9 @@ void ekf_start_timer(void);
  * 
  * @param from_tick first tick
  * @param to_tick second tick
- * @return float dt beween the two ticks
+ * @return ekf_data_t dt beween the two ticks
  */
-float ekf_compute_dt(const TickType_t from_tick, const TickType_t to_tick);
+ekf_data_t ekf_compute_dt(const TickType_t from_tick, const TickType_t to_tick);
 
 
 /**
@@ -47,7 +47,7 @@ float ekf_compute_dt(const TickType_t from_tick, const TickType_t to_tick);
  *                                                  ekf_start_timer() not called before
  *                              NRF_SUCCESS no errors
  */
-uint32_t ekf_get_lap_timer(float *const lap);
+uint32_t ekf_get_lap_timer(ekf_data_t *const lap);
 
 #pragma endregion
 
@@ -99,7 +99,7 @@ uint32_t ekf_get_acc_mag_data(void);
  * @param n number of el of v
  * @param J vector where to save the jacobian
  */
-void J_normalization(const float *const v, const uint8_t n, float *const J);
+void J_normalization(const ekf_data_t *const v, const uint8_t n, ekf_data_t *const J);
 
 
 /**
@@ -111,7 +111,7 @@ void J_normalization(const float *const v, const uint8_t n, float *const J);
  * @param an vector where to save the normalized acc readings
  * @param Ra vecotr where to save the uncertainty
  */
-void norm_acc(float *const an, float *const Ra);
+void norm_acc(ekf_data_t *const an, ekf_data_t *const Ra);
 
 
 /**
@@ -121,7 +121,7 @@ void norm_acc(float *const an, float *const Ra);
  * @param Rm vecotr where to save the uncertainty
  * @param iter iter to select the mag data in the buffer
  */
-void norm_mag(float *const mn, float *const Rm, uint8_t iter);
+void norm_mag(ekf_data_t *const mn, ekf_data_t *const Rm, uint8_t iter);
 
 
 /**
@@ -132,7 +132,7 @@ void norm_mag(float *const mn, float *const Rm, uint8_t iter);
  * @param psi yaw value
  * @param q variable where to save the quaternion
  */
-void ekf_eul2quat(const float *const phi, const float *const theta, const float *const psi, float *const q);
+void ekf_eul2quat(const ekf_data_t *const phi, const ekf_data_t *const theta, const ekf_data_t *const psi, ekf_data_t *const q);
 
 
 /**
@@ -141,7 +141,7 @@ void ekf_eul2quat(const float *const phi, const float *const theta, const float 
  * @param q input quaternion
  * @param matrix variable where to save the matrix
  */
-void ekf_quat2rotM(const float *const q, float *const matrix);
+void ekf_quat2rotM(const ekf_data_t *const q, ekf_data_t *const matrix);
 
 
 /**
@@ -152,7 +152,15 @@ void ekf_quat2rotM(const float *const q, float *const matrix);
  * @param q2 seecond quaternion
  * @param qp Hamilton product
  */
-void hamilton_prod(const float *const q1, const float *const q2, float *const qp);
+void hamilton_prod(const ekf_data_t *const q1, const ekf_data_t *const q2, ekf_data_t *const qp);
+
+/**
+ * @brief hardcoded inverse of 4x4 matrix
+ * 
+ * @param mat input
+ * @param dst vector where to save the result
+ */
+void inv4x4(const float * const mat, float * const dst);
 
 
 /**

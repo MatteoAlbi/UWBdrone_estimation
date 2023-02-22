@@ -28,12 +28,15 @@
 #include "fds_manager.h"
 #include "FreeRTOS.h"
 
+typedef matrix_data_t ekf_data_t;
+
 /* Macro ---------------------------------------------------------*/
 #define NO_POS // disable the position computation of the ekf
 
-#define EKF_MAX_ACCEPTED_POS        1000.0
+#define EKF_MAX_ACCEPTED_POS        1000.0 //[m]
+#define EKF_MAX_GYRO                1.0 //[rad/s]
 #define EKF_G_MAGNITUDE             1000.0 //[mg]
-#define EKF_RAD_TO_DEG              180.0/ (float)M_PI
+#define EKF_RAD_TO_DEG              (ekf_data_t)(180.0/ (ekf_data_t)M_PI) //[deg/rad]
 #define EKF_MG_TO_MS2               9.807/EKF_G_MAGNITUDE //[m/s^2]
 #define EKF_SIGMA_68                1.0
 #define EKF_SIGMA_95                2.0
@@ -47,7 +50,7 @@
  * @param q input quaternion
  * @param eul output euler angles
  */
-void ekf_quat2eul(const float *const q, float *const eul);
+void ekf_quat2eul(const ekf_data_t *const q, ekf_data_t *const eul);
 
 
 /**
@@ -59,7 +62,7 @@ void ekf_quat2eul(const float *const q, float *const eul);
  * @return uint32_t NRF_SUCCESS if initialization complited
  *                  err code from ekf_get_acc_mag_data -> not able to init the attitude
  */
-uint32_t ekf_init(float *const ret);
+uint32_t ekf_init(ekf_data_t *const ret);
 
 
 /**
@@ -72,9 +75,9 @@ uint32_t ekf_init(float *const ret);
  *        updates it (if the uwb data is valid)
  * @todo manage errors in the sensors readings
  * 
- * @param ret pointer where to copy X_att
+ * @param ret pointer to extract variables for visualization
  */
-void ekf_step(float *const ret);
+void ekf_step(ekf_data_t *const ret);
 
 #pragma endregion
 
