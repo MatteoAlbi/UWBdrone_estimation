@@ -257,9 +257,9 @@ for k=1:n-1
     
     % Predicted measurements
     Zpred = [-2*X_att(3, k+1)*X_att(1, k+1) + 2*X_att(4, k+1)*X_att(2, k+1);
-    2*X_att(2, k+1)*X_att(1, k+1) + 2*X_att(4, k+1)*X_att(3, k+1);
-    X_att(1, k+1)^2 - X_att(2, k+1)^2 - X_att(3, k+1)^2 + X_att(4, k+1)^2;
-    2*X_att(4, k+1)*X_att(1, k+1) + 2*X_att(3, k+1)*X_att(2, k+1)];
+              2*X_att(2, k+1)*X_att(1, k+1) + 2*X_att(4, k+1)*X_att(3, k+1);
+                X_att(1, k+1)^2 - X_att(2, k+1)^2 - X_att(3, k+1)^2 + X_att(4, k+1)^2;
+              2*X_att(4, k+1)*X_att(1, k+1) + 2*X_att(3, k+1)*X_att(2, k+1)];
     
     % linearized measurement mapping
     J_H = zeros(4,7);

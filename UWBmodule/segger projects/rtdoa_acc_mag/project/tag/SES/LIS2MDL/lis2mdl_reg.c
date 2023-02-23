@@ -1433,7 +1433,7 @@ int32_t lis2mdl_get_mag_calibrated(float *buf){
   int32_t err = lis2mdl_get_mag(NULL);
 
 #ifdef DEBUG_ON
-  //printf("raw_m:\t%3.2f\t%3.2f\t%3.2f", magnetic_mG[0], magnetic_mG[1], magnetic_mG[2]);
+  printf("raw_m:\t%3.2f\t%3.2f\t%3.2f", magnetic_mG[0], magnetic_mG[1], magnetic_mG[2]);
 #endif
   
   if(!err){      

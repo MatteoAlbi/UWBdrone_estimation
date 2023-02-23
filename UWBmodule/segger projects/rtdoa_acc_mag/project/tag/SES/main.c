@@ -64,17 +64,17 @@ TaskHandle_t main_task_handle;
 void mainTask() {
 
   //vTaskDelay(12000);
-  //pycom_start(10, 10000, 30000);
+  pycom_start(10, 10000, 30000);
   
   ekf_init(ret);
   //prev = xTaskGetTickCount();
   while (1) {
     ekf_step(ret);
-    printf("\t\tq:\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t", ret[0], ret[1], ret[2], ret[3]);
+    //printf("\tq:\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t", ret[0], ret[1], ret[2], ret[3]);
     ekf_quat2eul(ret, eul);
-    printf("\teul:\t%3.2f\t%3.2f\t%3.2f", eul[0], eul[1], eul[2]);
+    printf("\teul:\t%3.2f\t%3.2f\t%3.2f\t", eul[0], eul[1], eul[2]);
     //printf("\taccG:\t%1.3f\t%1.3f\t%1.3f", ret[5], ret[6], ret[7]);
-    //printf("\text_acc_det: %f", ret[8]);
+    printf("\text_acc_det: %d", (int)ret[8]);
     //printf("\tdt: %f", ret[4]);
     printf("\r\n");
 

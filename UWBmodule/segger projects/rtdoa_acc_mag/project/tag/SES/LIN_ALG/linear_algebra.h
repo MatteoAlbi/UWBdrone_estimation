@@ -96,7 +96,7 @@ void matrix_mult(const matrix_data_t *const matrix_1, const matrix_data_t *const
 
 
 /**
- * @brief compute matrix multiplication matrix_1 * matrix_2.t (second matrix will be transposed)
+ * @brief compute matrix multiplication matrix_1 * matrix_2.t (second matrix is transposed)
  *        NB: matrix_prod must be different from matrix_1 and matrix_2
  * 
  * @param matrix_1      input matrix 1

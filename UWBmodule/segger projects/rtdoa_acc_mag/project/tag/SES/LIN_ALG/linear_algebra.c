@@ -19,7 +19,7 @@ void display_flat_matrix(const matrix_data_t *const matrix, const uint32_t r, co
     printf("dim: %dx%d\n",r,c);
     for(uint32_t i=0; i<r; i++){
         for(uint32_t j=0; j<c; j++){
-            printf("%f ", matrix[i * c + j]);
+            printf("%4.3e ", matrix[i * c + j]);
         }
         printf("\n");
     }
@@ -54,7 +54,7 @@ void transpose(const matrix_data_t *const matrix, matrix_data_t *const t_matrix,
 
 
 void self_transpose(matrix_data_t *const matrix, const uint32_t r, const uint32_t c){
-    float tmp[r*c];
+    matrix_data_t tmp[r*c];
     transpose(matrix, tmp, r, c);
     memcpy(matrix, tmp, sizeof(matrix_data_t)*r*c);
 }
@@ -94,10 +94,9 @@ void matrix_mult_T(const matrix_data_t *const matrix_1, const matrix_data_t *con
 
 void quadratic_form(const matrix_data_t *const m1, const matrix_data_t *const m2, 
                     matrix_data_t *const q_form, const uint32_t r, const uint32_t c){
-    float tmp[r*c], tmp2[r*c];
+    matrix_data_t tmp[r*c];
     matrix_mult(m1, m2, tmp, r, c, c);
-    transpose(m1, tmp2, r, c);
-    matrix_mult(tmp, tmp2, q_form, r, r, c);
+    matrix_mult_T(tmp, m1, q_form, r, r, c);
 }
 
 
@@ -227,8 +226,9 @@ void adjoint(const matrix_data_t *const A, matrix_data_t *const adj, const uint3
 bool inverse(const matrix_data_t *const A, matrix_data_t *const inverse, const uint32_t dim){
     // Find determinant of A[][]
     matrix_data_t det = determinant(A, dim); 
-    if (det == 0)
-    {
+    //display_flat_matrix(A, dim, dim);
+    //printf("|S|=%4.3e\r\n",det);
+    if (det == 0) {
         printf("Singular matrix, can't find its inverse\n");
         return false;
     }
