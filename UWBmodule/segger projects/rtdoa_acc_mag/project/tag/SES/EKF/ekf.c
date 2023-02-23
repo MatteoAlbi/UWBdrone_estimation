@@ -60,8 +60,15 @@ static ekf_data_t P_pos[16];
 
 // measurement variables
 static ekf_data_t h[4];
+static ekf_data_t inn[4];
 static ekf_data_t z[4];
 static ekf_data_t Rz[16];
+
+static ekf_data_t Jacc[12];
+static ekf_data_t Jmag[12];
+static ekf_data_t Jh[16];
+static ekf_data_t S[16];
+static ekf_data_t W[16];
 
 static ekf_data_t dt; // interval between cycles of acc measurements
 
@@ -208,12 +215,12 @@ void norm_acc(ekf_data_t *const an, ekf_data_t *const Ra){
     for(uint8_t i=0; i<3; i++) ekf_data_buf[i] = (ekf_data_t)acc_config->unc[i];
     v2diag_m(ekf_data_buf, Ra, 3);
     // propagate scale
-    for(uint8_t i=0; i<3; i++) Ra[i*4] *= powf(acc_config->scale[i], 2);
+    //for(uint8_t i=0; i<3; i++) Ra[i*4] *= powf(acc_config->scale[i], 2);
     // propagate normalization
-    J_normalization(acc_data, 3, v_tmp);
-    quadratic_form(v_tmp, Ra, Ra, 3, 3);
+    //J_normalization(acc_data, 3, v_tmp);
+    //quadratic_form(v_tmp, Ra, Ra, 3, 3);
     // easy way
-    //for(uint8_t i=0; i<3*3; i++) Ra[i] /= powf(EKF_G_MAGNITUDE, 2);
+    for(uint8_t i=0; i<3*3; i++) Ra[i] /= powf(EKF_G_MAGNITUDE, 2);
     
     // // case norm_acc != g -> increase Ra_n (THIS PART IS NOT USED IN RUNNING, ONLY IN INIT)
     // if(mag_buff_iter > 0){
@@ -251,9 +258,9 @@ void ekf_eul2quat(const ekf_data_t *const phi, const ekf_data_t *const theta, co
 
 
 void ekf_quat2eul(const ekf_data_t *const q, ekf_data_t *const eul){
-    eul[0] = atan2f(2*q[1]*q[0] + 2*q[3]*q[2], pow(q[0], 2) - pow(q[1], 2) - pow(q[2], 2) + pow(q[3], 2)) * EKF_RAD_TO_DEG;
-    eul[1] = asin(2*q[0]*q[2] - 2*q[1]*q[3]) * EKF_RAD_TO_DEG;
-    eul[2] = atan2f(2*q[3]*q[0] + 2*q[2]*q[1], pow(q[0], 2) + pow(q[1], 2) - pow(q[2], 2) - pow(q[3], 2)) * EKF_RAD_TO_DEG;
+    eul[0] = atan2f(2*q[1]*q[0] + 2*q[3]*q[2], powf(q[0], 2) - powf(q[1], 2) - powf(q[2], 2) + powf(q[3], 2)) * EKF_RAD_TO_DEG;
+    eul[1] = asinf(2*q[0]*q[2] - 2*q[1]*q[3]) * EKF_RAD_TO_DEG;
+    eul[2] = atan2f(2*q[3]*q[0] + 2*q[2]*q[1], powf(q[0], 2) + powf(q[1], 2) - powf(q[2], 2) - powf(q[3], 2)) * EKF_RAD_TO_DEG;
 }
 
 
@@ -305,7 +312,7 @@ void inv4x4(const float * const mat, float * const dst){
 
 
 void ekf_TRIAD(void){
-    ekf_data_t J[12], v_tmp[16], acc_norm[3], mag_norm[3];
+    ekf_data_t v_tmp[16], acc_norm[3], mag_norm[3];
     ekf_data_t mD, mN, Zm1_num, tmp4;
 
     norm_acc(acc_norm, v_tmp); // Ra_n
@@ -313,7 +320,7 @@ void ekf_TRIAD(void){
     
 #ifdef DEBUG_ON
     //printf("acc_n:\t%1.3f\t%1.3f\t%1.3f", acc_norm[0], acc_norm[1], acc_norm[2]);
-    //printf("\tmag_n:\t%1.3f\t%1.3f\t%1.3f", mag_norm[0], mag_norm[1], mag_norm[2]);
+    printf("\tmag_n:\t%1.3f\t%1.3f\t%1.3f", mag_norm[0], mag_norm[1], mag_norm[2]);
 #endif
 
     // TRIAD
@@ -321,7 +328,7 @@ void ekf_TRIAD(void){
     memcpy(&z[0], acc_norm, sizeof(ekf_data_t) * 3);
     // compute 4th measure
     mD = acc_norm[0]*mag_norm[0]+acc_norm[1]*mag_norm[1]+acc_norm[2]*mag_norm[2];
-    mN = sqrtf(1 - pow(mD,2));
+    mN = sqrt(1.0 - powf(mD,2.0));
     Zm1_num = acc_norm[1]*mag_norm[2] - acc_norm[2]*mag_norm[1]; //Zm_num
     z[3] = Zm1_num/mN;
 
@@ -330,34 +337,34 @@ void ekf_TRIAD(void){
     // uncertainty propagation
 
     // acc contribution
-    J[0] = 1;
-    J[1] = 0;
-    J[2] = 0;
-    J[3] = 0;
-    J[4] = 1;
-    J[5] = 0;
-    J[6] = 0;
-    J[7] = 0;
-    J[8] = 1;
-    J[9] =  Zm1_num * mD * mag_norm[0] / tmp4;
-    J[10] = Zm1_num * mD * mag_norm[1] / tmp4 + mag_norm[2] / mN;
-    J[11] = Zm1_num * mD * mag_norm[2] / tmp4 - mag_norm[1] / mN;
-    quadratic_form(J, v_tmp, v_tmp, 4, 3); // J_ZA * Ra_n * J_ZA^t
+    Jacc[0] = 1.0;
+    Jacc[1] = 0.0;
+    Jacc[2] = 0.0;
+    Jacc[3] = 0.0;
+    Jacc[4] = 1.0;
+    Jacc[5] = 0.0;
+    Jacc[6] = 0.0;
+    Jacc[7] = 0.0;
+    Jacc[8] = 1.0;
+    Jacc[9] =  Zm1_num * mD * mag_norm[0] / tmp4;
+    Jacc[10] = Zm1_num * mD * mag_norm[1] / tmp4 + mag_norm[2] / mN;
+    Jacc[11] = Zm1_num * mD * mag_norm[2] / tmp4 - mag_norm[1] / mN;
+    quadratic_form(Jacc, v_tmp, v_tmp, 4, 3); // J_ZA * Ra_n * J_ZA^t
 
     // mag contribution
-    J[0] = 0;
-    J[1] = 0;
-    J[2] = 0;
-    J[3] = 0;
-    J[4] = 0;
-    J[5] = 0;
-    J[6] = 0;
-    J[7] = 0;
-    J[8] = 0;
-    J[9] =  Zm1_num * mD * acc_norm[0] / tmp4;
-    J[10] = Zm1_num * mD * acc_norm[1] / tmp4 - acc_norm[2] / mN;
-    J[11] = Zm1_num * mD * acc_norm[2] / tmp4 + acc_norm[1] / mN;
-    quadratic_form(J, Rz, Rz, 4, 3); // J_ZM * Rm_n * J_ZM^t    
+    Jmag[0] = 0.0;
+    Jmag[1] = 0.0;
+    Jmag[2] = 0.0;
+    Jmag[3] = 0.0;
+    Jmag[4] = 0.0;
+    Jmag[5] = 0.0;
+    Jmag[6] = 0.0;
+    Jmag[7] = 0.0;
+    Jmag[8] = 0.0;
+    Jmag[9] =  Zm1_num * mD * acc_norm[0] / tmp4;
+    Jmag[10] = Zm1_num * mD * acc_norm[1] / tmp4 - acc_norm[2] / mN;
+    Jmag[11] = Zm1_num * mD * acc_norm[2] / tmp4 + acc_norm[1] / mN;
+    quadratic_form(Jmag, Rz, Rz, 4, 3); // J_ZM * Rm_n * J_ZM^t    
 
     for(uint8_t i=0; i<4*4; i++) Rz[i] += v_tmp[i];
 
@@ -365,15 +372,12 @@ void ekf_TRIAD(void){
 
 
 void ekf_init_att(void){ 
-    ekf_data_t J[12], v_tmp[9], acc_norm[3], mag_norm[3];
+    ekf_data_t v_tmp[9], acc_norm[3], mag_norm[3];
     ekf_data_t tmp, tmp2, tmp3;
     // get z0..z4
     
     norm_acc(acc_norm, v_tmp); // Ra_n
     norm_mag(mag_norm, Rz, mag_buff_iter); // Rm_n
-
-    // add acc to measure z0..z2
-    memcpy(&z[0], acc_norm, sizeof(ekf_data_t) * 3);
 
     // z3, z4 without dividing by mN
     tmp = acc_norm[0]*mag_norm[0]+acc_norm[1]*mag_norm[1]+acc_norm[2]*mag_norm[2]; // mD
@@ -384,54 +388,54 @@ void ekf_init_att(void){
     // variance propagation
 
     // acc contribuion
-    J[0] = 0;
-    J[1] =   acc_norm[2] / (powf(acc_norm[1],2) + powf(acc_norm[2],2));
-    J[2] = - acc_norm[1] / (powf(acc_norm[1],2) + powf(acc_norm[2],2));
-    J[3] = -1 / sqrtf(1 - powf(acc_norm[0],2));
-    J[4] = 0;
-    J[5] = 0;
-    J[6] = tmp2*(2*acc_norm[0]*mag_norm[0] + acc_norm[1]*mag_norm[1] + acc_norm[2]*mag_norm[2]) / tmp;
-    J[7] = (tmp2*acc_norm[0]*mag_norm[1] + tmp3*mag_norm[2]) / tmp;
-    J[8] = (tmp2*acc_norm[0]*mag_norm[2] - tmp3*mag_norm[1]) / tmp;
-    quadratic_form(J, v_tmp, v_tmp, 3, 3); // J_eul_A * Ra_n * J_eul_A.t
+    Jacc[0] = 0.0;
+    Jacc[1] =   acc_norm[2] / (powf(acc_norm[1],2.0) + powf(acc_norm[2],2.0));
+    Jacc[2] = - acc_norm[1] / (powf(acc_norm[1],2.0) + powf(acc_norm[2],2.0));
+    Jacc[3] = -1.0 / sqrtf(1.0 - powf(acc_norm[0],2.0));
+    Jacc[4] = 0.0;
+    Jacc[5] = 0.0;
+    Jacc[6] = tmp2*(2*acc_norm[0]*mag_norm[0] + acc_norm[1]*mag_norm[1] + acc_norm[2]*mag_norm[2]) / tmp;
+    Jacc[7] = (tmp2*acc_norm[0]*mag_norm[1] + tmp3*mag_norm[2]) / tmp;
+    Jacc[8] = (tmp2*acc_norm[0]*mag_norm[2] - tmp3*mag_norm[1]) / tmp;
+    quadratic_form(Jacc, v_tmp, v_tmp, 3, 3); // J_eul_A * Ra_n * J_eul_A.t
 
     // mag contribution
-    J[0] = 0;
-    J[1] = 0;
-    J[2] = 0;
-    J[3] = 0;
-    J[4] = 0;
-    J[5] = 0;
-    J[6] = -(1 - powf(acc_norm[0], 2)) * tmp2 / tmp;
-    J[7] = (tmp2*acc_norm[0]*acc_norm[1] - tmp3*acc_norm[2]) / tmp;
-    J[8] = (tmp2*acc_norm[0]*acc_norm[2] + tmp3*acc_norm[1]) / tmp;
-    quadratic_form(J, Rz, Rz, 3, 3); // J_eul_M * Rm_n * J_eul_M.t    
+    Jmag[0] = 0;
+    Jmag[1] = 0;
+    Jmag[2] = 0;
+    Jmag[3] = 0;
+    Jmag[4] = 0;
+    Jmag[5] = 0;
+    Jmag[6] = -(1.0 - powf(acc_norm[0], 2.0)) * tmp2 / tmp;
+    Jmag[7] = (tmp2*acc_norm[0]*acc_norm[1] - tmp3*acc_norm[2]) / tmp;
+    Jmag[8] = (tmp2*acc_norm[0]*acc_norm[2] + tmp3*acc_norm[1]) / tmp;
+    quadratic_form(Jmag, Rz, Rz, 3, 3); // J_eul_M * Rm_n * J_eul_M.t    
     
     // eul angles variance
     for(uint8_t i=0; i<3*3; i++) Rz[i] += v_tmp[i]; // Rz <- Reul
 
     // eul angles
     tmp3 = atan2f(tmp2, tmp3); // psi
-    tmp = atan2f(z[1], z[2]); // phi
-    tmp2 = asinf(-z[0]); // theta
+    tmp = atan2f(acc_norm[1], acc_norm[2]); // phi
+    tmp2 = asinf(-acc_norm[0]); // theta
     
     // eul -> quat
     ekf_eul2quat(&tmp, &tmp2, &tmp3, X_att);
 
     // quat uncertainty
-    J[0] =  -sinf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2 + cosf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2; 
-    J[1] =  -cosf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2 + sinf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2; 
-    J[2] =  -cosf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2 + sinf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2; 
-    J[3] =   cosf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2 + sinf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2; 
-    J[4] =  -sinf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2 - cosf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2; 
-    J[5] =  -sinf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2 - cosf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2; 
-    J[6] =  -sinf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2 + cosf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2; 
-    J[7] =   cosf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2 - sinf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2; 
-    J[8] =  -cosf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2 + sinf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2; 
-    J[9] =  -sinf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2 - cosf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2; 
-    J[10] = -cosf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2 - sinf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2; 
-    J[11] =  cosf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2 + sinf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2;
-    quadratic_form(J, Rz, P_att, 4, 3);
+    Jh[0] =  -sinf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2 + cosf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2; 
+    Jh[1] =  -cosf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2 + sinf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2; 
+    Jh[2] =  -cosf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2 + sinf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2; 
+    Jh[3] =   cosf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2 + sinf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2; 
+    Jh[4] =  -sinf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2 - cosf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2; 
+    Jh[5] =  -sinf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2 - cosf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2; 
+    Jh[6] =  -sinf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2 + cosf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2; 
+    Jh[7] =   cosf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2 - sinf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2; 
+    Jh[8] =  -cosf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2 + sinf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2; 
+    Jh[9] =  -sinf(tmp/2)*cosf(tmp2/2)*sinf(tmp3/2)/2 - cosf(tmp/2)*sinf(tmp2/2)*cosf(tmp3/2)/2; 
+    Jh[10] = -cosf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2 - sinf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2; 
+    Jh[11] =  cosf(tmp/2)*cosf(tmp2/2)*cosf(tmp3/2)/2 + sinf(tmp/2)*sinf(tmp2/2)*sinf(tmp3/2)/2;
+    quadratic_form(Jh, Rz, P_att, 4, 3);
 }
 
 
@@ -472,7 +476,7 @@ void ekf_uwb2meas(void){
 #pragma region // -- filter
 
 void ekf_att_prediction(void){
-    ekf_data_t J[12], v_tmp[16], v1[3], v2[3];
+    ekf_data_t v_tmp[16], v1[3], v2[3];
     ekf_data_t tmp, tmp2, tmp3;
 
     //normalize mag data
@@ -481,52 +485,48 @@ void ekf_att_prediction(void){
 
     // compute quaternion rotating from the second mag vector to the first one: v1 -> v2
     /* https://stackoverflow.com/questions/1171849/finding-quaternion-representing-the-rotation-from-one-vector-to-another*/
-    
-    tmp = powf(norm2(v1, 3), 2);
-    tmp2 = powf(norm2(v2, 3), 2);
-    tmp3 = sqrtf(tmp * tmp2); 
 
     // uncertainty
     // second mag data
-    J[0]  =   v1[0] * tmp2 / tmp3 + v2[0];
-    J[1]  =   v1[1] * tmp2 / tmp3 + v2[1];
-    J[2]  =   v1[2] * tmp2 / tmp3 + v2[2];
-    J[3]  =   0;
-    J[4]  =   v2[2];
-    J[5]  = - v2[1];
-    J[6]  = - v2[2];
-    J[7]  =   0;
-    J[8]  =   v2[0];
-    J[9]  =   v2[1];
-    J[10] = - v2[0];
-    J[11] =   0;
-    quadratic_form(J, Rz, Rz, 4, 3);
+    Jmag[0]  =   v2[0];
+    Jmag[1]  =   v2[1];
+    Jmag[2]  =   v2[2];
+    Jmag[3]  =   0;
+    Jmag[4]  =   v2[2];
+    Jmag[5]  = - v2[1];
+    Jmag[6]  = - v2[2];
+    Jmag[7]  =   0;
+    Jmag[8]  =   v2[0];
+    Jmag[9]  =   v2[1];
+    Jmag[10] = - v2[0];
+    Jmag[11] =   0;
+    quadratic_form(Jmag, Rz, Rz, 4, 3);
     // first mag data
-    J[0]  =   v2[0] * tmp / tmp3 + v1[0];
-    J[1]  =   v2[1] * tmp / tmp3 + v1[1];
-    J[2]  =   v2[2] * tmp / tmp3 + v1[2];
-    J[3]  =   0;
-    J[4]  = - v1[2];
-    J[5]  =   v1[1];
-    J[6]  =   v1[2];
-    J[7]  =   0;
-    J[8]  = - v1[0];
-    J[9]  = - v1[1];
-    J[10] =   v1[0];
-    J[11] =   0;
-    quadratic_form(J, v_tmp, v_tmp, 4, 3);
+    Jmag[0]  =   v1[0];
+    Jmag[1]  =   v1[1];
+    Jmag[2]  =   v1[2];
+    Jmag[3]  =   0;
+    Jmag[4]  = - v1[2];
+    Jmag[5]  =   v1[1];
+    Jmag[6]  =   v1[2];
+    Jmag[7]  =   0;
+    Jmag[8]  = - v1[0];
+    Jmag[9]  = - v1[1];
+    Jmag[10] =   v1[0];
+    Jmag[11] =   0;
+    quadratic_form(Jmag, v_tmp, v_tmp, 4, 3);
     // tot
     for(uint8_t i=0; i<4*4; i++) Rz[i] += v_tmp[i];
 
     // value
-    z[0] = tmp3 + v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+    z[0] = 1 + v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
     cross_prod3(v1, v2, &z[1]);
 
     // normalize
     normalize(z, 4); // q_rot
     // uncertainty
-    J_normalization(z, 4, J);
-    quadratic_form(J, Rz, Rz, 4, 4);
+    J_normalization(z, 4, Jh);
+    quadratic_form(Jh, Rz, Rz, 4, 4);
 
     // apply it on current attitude
     /**
@@ -583,14 +583,14 @@ void ekf_att_prediction(void){
     for(uint8_t i=0; i<4*4; i++) P_att[i] += Rz[i];
 
     // value
-    memcpy(J, X_att, sizeof(ekf_data_t) * 4);
-    hamilton_prod(J, z, X_att);
-
+    memcpy(v_tmp, X_att, sizeof(ekf_data_t) * 4);
+    hamilton_prod(v_tmp, z, X_att);
+    normalize(X_att, 4);
 }
 
 
 void ekf_att_update(void){
-    ekf_data_t J[16], S[16], invS[16], W[16];
+    ekf_data_t v_tmp[16];
 
     /** increase unc based on dt:
      * usual attitude pred: (S_omega*dt/2 * + eye(4)) * X_att(1:4, k)
@@ -599,8 +599,8 @@ void ekf_att_update(void){
      * -> norm2 of S*dt/2 * is 3 * EKF_MAX_GYRO * dt/2: multiply P_att by (1 + 30*dt/2)^2
      */
     ekf_data_t tmp = powf(1 + 3*EKF_MAX_GYRO*dt/2, 2);
-    // cap at dt = 0.01 [s] (for debug mode)
-    tmp = MIN(powf(1 + 3*EKF_MAX_GYRO*0.01/2, 2), tmp);
+    // cap at dt = EKF_MAX_DT [s] (for debug mode)
+    tmp = MIN(powf(1 + 3*EKF_MAX_GYRO*EKF_MAX_DT/2, 2), tmp);
     for(uint8_t i=0; i<4; i++) P_att[i*5] *= tmp; // only diagonal 
 
     // get z measurements
@@ -611,59 +611,58 @@ void ekf_att_update(void){
     h[1] =   2 * X_att[1] * X_att[0] + 2 * X_att[3] * X_att[2];
     h[2] = powf(X_att[0], 2) - powf(X_att[1], 2) - powf(X_att[2], 2) + powf(X_att[3], 2);
     h[3] =   2 * X_att[3] * X_att[0] + 2 * X_att[2] * X_att[1];
-    
-#ifdef DEBUG_ON
-    printf("z:  %1.3f\t%1.3f\t%1.3f\t%1.3f\t", z[0], z[1], z[2], z[3]);
-    //printf("h:  %1.3f\t%1.3f\t%1.3f\t%1.3f\t", h[0], h[1], h[2], h[3]);
-#endif
 
     // innovation
-    z[0] -= h[0];
-    z[1] -= h[1];
-    z[2] -= h[2];  
-    z[3] -= h[3];
+    inn[0] = z[0] - h[0];
+    inn[1] = z[1] - h[1];
+    inn[2] = z[2] - h[2];  
+    inn[3] = z[3] - h[3];
+
+#ifdef DEBUG_ON
+    //printf("z:\t%1.3f\t%1.3f\t%1.3f\t%1.3f\t", z[0], z[1], z[2], z[3]);
+    //printf("h:\t%1.3f\t%1.3f\t%1.3f\t%1.3f\t", h[0], h[1], h[2], h[3]);
+    //printf("inn:\t%1.3f\t%1.3f\t%1.3f\t%1.3f\t", inn[0], inn[1], inn[2], inn[3]);
+#endif
 
     // Jh
-    J[0]  = - X_att[2] * 2;
-    J[1]  =   X_att[3] * 2;
-    J[2]  = - X_att[0] * 2;
-    J[3]  =   X_att[1] * 2;
-    J[4]  =   X_att[1] * 2;
-    J[5]  =   X_att[0] * 2;
-    J[6]  =   X_att[3] * 2;
-    J[7]  =   X_att[2] * 2;
-    J[8]  =   X_att[0] * 2;
-    J[9]  = - X_att[1] * 2;
-    J[10] = - X_att[2] * 2;
-    J[11] =   X_att[3] * 2;
-    J[12] =   X_att[3] * 2;
-    J[13] =   X_att[2] * 2;
-    J[14] =   X_att[1] * 2;
-    J[15] =   X_att[0] * 2;
+    Jh[0]  = - X_att[2] * 2;
+    Jh[1]  =   X_att[3] * 2;
+    Jh[2]  = - X_att[0] * 2;
+    Jh[3]  =   X_att[1] * 2;
+    Jh[4]  =   X_att[1] * 2;
+    Jh[5]  =   X_att[0] * 2;
+    Jh[6]  =   X_att[3] * 2;
+    Jh[7]  =   X_att[2] * 2;
+    Jh[8]  =   X_att[0] * 2;
+    Jh[9]  = - X_att[1] * 2;
+    Jh[10] = - X_att[2] * 2;
+    Jh[11] =   X_att[3] * 2;
+    Jh[12] =   X_att[3] * 2;
+    Jh[13] =   X_att[2] * 2;
+    Jh[14] =   X_att[1] * 2;
+    Jh[15] =   X_att[0] * 2;
 
     // Kalman steps
-    quadratic_form(J, P_att, S, 4, 4);
+    quadratic_form(Jh, P_att, S, 4, 4);
     //display_flat_matrix(S, 4, 4);
     for(uint8_t i=0; i<4*4; i++) S[i] += Rz[i]; // S
     //display_flat_matrix(S, 4, 4);
-    inverse(S, invS, 4); // S^-1
-    //inv4x4(S, invS);
+    inverse(S, v_tmp, 4); // S^-1
     //display_flat_matrix(S, 4, 4);
-    matrix_mult_T(P_att, J, Rz, 4, 4, 4); // Rz <- P_att * J.t
-    matrix_mult(Rz, invS, W, 4, 4, 4); // W = P_att * J.t / S
+    matrix_mult_T(P_att, Jh, Rz, 4, 4, 4); // Rz <- P_att * Jh.t
+    matrix_mult(Rz, v_tmp, W, 4, 4, 4); // W = P_att * Jh.t / S
 
     // X_att
-    matrix_mult(W, z, S, 4, 1, 4); // S <- W * inn
+    matrix_mult(W, inn, S, 4, 1, 4); // S <- W * inn
     for(uint8_t i=0; i<4; i++) X_att[i] += S[i];
     normalize(X_att, 4);
 
     // P_att
-    //self_transpose(J, 4, 4); // J
-    matrix_mult(W, J, S, 4, 4, 4); // S <- W * J
-    for(uint8_t i=0; i<4*4; i++) S[i] = -S[i]; // S <- - W * J ;
-    for(uint8_t i=0; i<4; i++) S[i*5] += 1.0; // S <- I - W * J;
-    matrix_mult(S, P_att, J, 4, 4, 4); // J <- (I - W * J) * P_att
-    memcpy(P_att, J, sizeof(ekf_data_t)*16);
+    matrix_mult(W, Jh, S, 4, 4, 4); // S <- W * Jh
+    for(uint8_t i=0; i<4*4; i++) S[i] = -S[i]; // S <- - W * Jh ;
+    for(uint8_t i=0; i<4; i++) S[i*5] += 1.0; // S <- I - W * Jh;
+    matrix_mult(S, P_att, v_tmp, 4, 4, 4); // v_tmp <- (I - W * J) * P_att
+    memcpy(P_att, v_tmp, sizeof(ekf_data_t)*16);
 }
 
 
@@ -844,8 +843,8 @@ void ekf_step(ekf_data_t *const ret){
       ekf_att_prediction(); // use mag for prediction
     }
     else{ 
-        ekf_att_update();
-        //ekf_init_att();
+        //ekf_att_update();
+        ekf_init_att();
     }
 
     // force the quaternion to be with positive fourth component

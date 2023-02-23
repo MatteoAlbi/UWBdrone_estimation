@@ -35,6 +35,7 @@ typedef matrix_data_t ekf_data_t;
 
 #define EKF_MAX_ACCEPTED_POS        1000.0 //[m]
 #define EKF_MAX_GYRO                1.0 //[rad/s]
+#define EKF_MAX_DT                  0.01 //[s]
 #define EKF_G_MAGNITUDE             1000.0 //[mg]
 #define EKF_RAD_TO_DEG              (ekf_data_t)(180.0/ (ekf_data_t)M_PI) //[deg/rad]
 #define EKF_MG_TO_MS2               9.807/EKF_G_MAGNITUDE //[m/s^2]
