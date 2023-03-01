@@ -22,7 +22,7 @@
 #include <string.h>
 
 typedef unsigned int uint32_t;
-typedef float matrix_data_t;
+typedef double matrix_data_t;
 
 
 /**
