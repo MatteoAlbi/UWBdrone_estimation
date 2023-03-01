@@ -20,7 +20,8 @@ n = length(t);
 % Input angular velocity
 omega_x = zeros(1,n);%0.1*sin(2*pi*t/10);
 omega_y = zeros(1,n);%0.2*cos(2*pi*t/4);
-omega_z = 0.5*ones(1,n);%0.4*sin(2*pi*t/3);
+omega_z = 1*ones(1,n);%0.4*sin(2*pi*t/3);
+triad = zeros(4,n);
 
 % Input motor acceleration
 a_M = g* 0.1 * (1 + sin(2*pi*t/7));
@@ -185,15 +186,6 @@ for k=1:n-1
         0, 0, 0, omega_no_bias(1);
         zeros(1,4)];
     S_omega = S_omega - S_omega';
-
-    X_att(1:4, k+1) = (S_omega*dt/2 + eye(4))*X_att(1:4, k);
-    X_att(1:4, k+1) = X_att(1:4, k+1)/norm(X_att(1:4, k+1));
-    X_att(5:7, k+1) = X_att(5:7, k);
-    
-    % ensure 1st component of quaternion is positive
-    if X_att(1) < 0
-        X_att(1:4) = -X_att(1:4);
-    end
     
     % Covariance of the prediction
     Gatt = [-X_att(2,k), -X_att(3,k), -X_att(4,k);
@@ -210,7 +202,16 @@ for k=1:n-1
     J_Xatt = [ S_omega*dt/2 + eye(4), -Gatt;
             zeros(3,4),eye(3,3)];
 
+    X_att(1:4, k+1) = (S_omega*dt/2 + eye(4))*X_att(1:4, k);
+    X_att(1:4, k+1) = X_att(1:4, k+1)/norm(X_att(1:4, k+1));
+    X_att(5:7, k+1) = X_att(5:7, k);
+
     P_att = J_Xatt*P_att*J_Xatt' + J_Gatt*Rg*J_Gatt' + J_Batt*Rbg*J_Batt';
+    scale = (1 + 3*1*dt/2)^2;
+%     for i = 1:length(P_att)
+%         P_att(i,i) = P_att(i,i)*scale;
+%     end
+    
     
     % -- Update
     % Split acc contributions
@@ -241,6 +242,7 @@ for k=1:n-1
     Zm_num = (aG(2)*m_n(3) - aG(3)*m_n(2));
     Zm = Zm_num/mN;
     Z_bar = [aG;Zm];
+    triad(:,k) = Z_bar';
     
     % uncert propagation matrices
     J_ZA = [eye(3,3);
@@ -426,6 +428,13 @@ plot(t, eul_est(3,:));
 legend('x', 'y', 'z', 'Location', 'best');
 xlabel('t [s]');
 title("Estimated euler angles");
+
+FigID = FigID + 1;
+figure(FigID), clf, hold on;
+plot(t, triad);
+% legend('x', 'y', 'z', 'Location', 'best');
+xlabel('t [s]');
+title("TRIAD");
 
 % FigID = FigID + 1;
 % figure(FigID), clf, hold on;

@@ -69,7 +69,7 @@ stream_data_buf = []
 global acc_extreme_buf
 
 # serial interface
-port = "COM3"
+port = "COM4"
 br = 921600
 timeout = 0.01
 

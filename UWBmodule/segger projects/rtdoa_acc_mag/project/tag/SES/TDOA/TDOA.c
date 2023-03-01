@@ -198,7 +198,7 @@ uint32_t tag_tdoa_run(float * rtdoa_buf, TickType_t * tick) {
 
     if (seq_num == 6){
         // save tick time
-        *tick = xTaskGetTickCount();
+        if(tick != NULL) *tick = xTaskGetTickCount();
         nrf_gpio_pin_clear(13);
         seq_num = 0;
         dwt_rxreset();
@@ -238,12 +238,10 @@ uint32_t tag_tdoa_run(float * rtdoa_buf, TickType_t * tick) {
         
         // Compute position and saves it in rtdoa_buf
         uint32_t err = rTDoA(RX_TS, rtdoa_buf);
+        memset(RX_TS, 0, sizeof(RX_TS[0][0]) * NUM_ANCH * 4);
+
         if(err) return err;
         
-        if(rtdoa_buf == NULL) printf("%f %f %f\r\n", rtdoa_buf[0], 
-                                                             rtdoa_buf[1], 
-                                                             rtdoa_buf[2]);
-
         /* check for anomalies in data, 2 cases:
             pos_data == 0
             pos_data very high
@@ -260,9 +258,8 @@ uint32_t tag_tdoa_run(float * rtdoa_buf, TickType_t * tick) {
         //  while(1);
         //}
         
-        memset(RX_TS, 0, sizeof(RX_TS[0][0]) * NUM_ANCH * 4);
 		//vTaskDelay(18);
-        return err;
+        return 0;
     }
     else{
         //printf(":(\r\n");

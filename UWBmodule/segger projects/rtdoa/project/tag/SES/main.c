@@ -46,9 +46,9 @@ void mainTask() {
 
   while (1) {
 
-    //tag_tdoa_run();
-    vLIS2_TaskBypass();
-    nrf_delay_ms(1000);
+    tag_tdoa_run();
+    //vLIS2_TaskBypass();
+    //nrf_delay_ms(100);
 
   }
 

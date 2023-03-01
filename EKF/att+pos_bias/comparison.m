@@ -71,7 +71,8 @@ for k=1:n
     a(:,k) = [-2*q(3,k)*q(1,k) + 2*q(4,k)*q(2,k);
                  2*q(2,k)*q(1,k) + 2*q(4,k)*q(3,k);
                  q(1,k)^2 - q(2,k)^2 - q(3,k)^2 + q(4,k)^2] * g + ...
-                [0; 0; -1] * a_M(k); % add motor acceleration
+                [0;0;0];
+%                 [0; 0; -1] * a_M(k); % add motor acceleration
 
     % position and velocity
     if(k>1)
@@ -134,66 +135,28 @@ uwb = p + mvnrnd(mu_uwb, Ruwb, n)';
 
 % -- Initialization
 
-ekf_filt = EKF( q(:,1) + rand(4,1)*NoiseScale, ...
-                mu_g(:,1) + rand(3,1)*NoiseScale*BiasScale, ...
-                NoiseScale, ...
-                NoiseScale*BiasScale);
+ekf_filt = EKF( Ra, Rm, Rg, Rbg, eye(3));
 mad_filt = Madgwick(q(:,1) + rand(4,1)*NoiseScale, ...
                     Rg, ...
                     gamma + rand(3,1)*NoiseScale);
 
+ekf_filt.init_att(a_bar(:,1), m_bar(:,1), mu_g(:,1));
+ekf_filt.X_att = [q(:,1); mu_g(:,1)];
+% ekf_filt.P_att = [eye(4), zeros(4,3);
+%                   zeros(3,4), eye(3)/1000];
+
+mad_filt.imu_filter(a_bar(:,1), omega_bar(:,1), m_bar(:,1), dt);
+
 % attitude
 X_att_ekf = zeros(7,n);
 X_att_mad = zeros(7,n);
-% X_att(1:4,1) = q(:,1); % correct initial attitude
-% X_att(5:7,1) = mu_g(:,1) +  rand(3,1)*BiasScale; % correct initial gyro bias estimate
-% 
-% P_att = diag([NoiseScale*ones(1,4), ...
-%               sigma_mu_g']); % attitude, gyro_bias estimate cov
-% Innovation_att = zeros(4, n); % attitude innovation
-% 
-% % position
-% X_pos = zeros(7,n);
-% X_pos(1:2,1) = p(:,1); % correct initial position
-% X_pos(3:4,1) = v(:,1); % correct initial velocity
-% X_pos(5:7,1) = mu_a(:,1); % correct initial acc bias estimate
-% 
-% P_pos = diag([sigma_uwb; ...
-%               sigma_uwb*2/dt^2; ...
-%               sigma_mu_a]); % pos, vel, acc_bias estimate cov
-% Innovation_pos = zeros(4,n); % pos,vel innovation
-% 
-% % state function matrices
-% A = [1, 0, dt, 0;
-%      0, 1, 0,  dt;
-%      0, 0, 1,  0;
-%      0, 0, 0,  1];
-% B = [dt^2/2, 0;
-%      0,      dt^2/2;
-%      dt,     0;
-%      0,      dt];
-% % measurements matrix
-% H = [eye(4), zeros(4,3)];
-% 
-% % variables to compute vel from uwb (to filter corrupted measurements)
-% pos_buff_iter = 1;
-% vel_iter = -1;
-% pos_buff = zeros(2,2);
-% update_pos = false;
-% update_vel = false;
-% 
-% % motor's acceleration estimates
-% aM_est = zeros(1,length(t));
+
 
 %% KF loop
 
 for k=1:n-1
     % -- ATTITUDE EKF
-    % prediction
-    ekf_filt.predict_att(omega_bar(:,k+1), Rg, Rbg, dt);
-    % update
-    ekf_filt.update_att(a_bar(:,k+1), m_bar(:,k+1), Ra, Rm, Rba);
-
+    ekf_filt.step(omega_bar(:,k+1), dt, a_bar(:,k+1), m_bar(:,k+1));
     X_att_ekf(:, k+1) = ekf_filt.get_att(); 
 
     % -- Madgwick

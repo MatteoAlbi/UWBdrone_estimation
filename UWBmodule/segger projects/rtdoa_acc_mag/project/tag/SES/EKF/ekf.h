@@ -42,6 +42,16 @@ typedef matrix_data_t ekf_data_t;
 #define EKF_SIGMA_68                1.0
 #define EKF_SIGMA_95                2.0
 #define EKF_SIGMA_99                3.0 
+#define EKF_SIGMA_OUT               4.0
+
+#define EKF_CA                      0.98
+
+#ifndef MIN
+    #define MIN(a,b)    a < b ? a : b
+#endif
+#ifndef MAX
+    #define MAX(a,b)    a > b ? a : b
+#endif
 
 #pragma region /* Public functions ---------------------------------------------------------*/
 

@@ -1291,21 +1291,21 @@ int32_t lis2mdl_magnetic_raw_get_my(int16_t *val){
   ret |= err;
   err = lis2mdl_read_reg(LIS2MDL_OUTX_H_REG, &high_data, 1);
   ret |= err;
-  val[0] = (int16_t)(high_data * 256) + (int16_t)low_data;
+  val[0] = ((int16_t)high_data) * 256 + (int16_t)low_data;
 
   // Y-axis	
   err = lis2mdl_read_reg(LIS2MDL_OUTY_L_REG, &low_data, 1);
   ret |= err;
   err = lis2mdl_read_reg(LIS2MDL_OUTY_H_REG, &high_data, 1);
   ret |= err;
-  val[1] = (int16_t)(high_data * 256) + (int16_t)low_data;
+  val[1] = ((int16_t)high_data) * 256 + (int16_t)low_data;
 
   // Z-axis
   err = lis2mdl_read_reg(LIS2MDL_OUTZ_L_REG, &low_data, 1);
   ret |= err;
   err = lis2mdl_read_reg(LIS2MDL_OUTZ_H_REG, &high_data, 1);
   ret |= err;
-  val[2] = (int16_t)(high_data * 256) + (int16_t)low_data;
+  val[2] = ((int16_t)high_data) * 256 + (int16_t)low_data;
 
   return ret;
 }
@@ -1433,7 +1433,7 @@ int32_t lis2mdl_get_mag_calibrated(float *buf){
   int32_t err = lis2mdl_get_mag(NULL);
 
 #ifdef DEBUG_ON
-  printf("raw_m:\t%3.2f\t%3.2f\t%3.2f", magnetic_mG[0], magnetic_mG[1], magnetic_mG[2]);
+  //printf("raw_m:\t%3.2f\t%3.2f\t%3.2f", magnetic_mG[0], magnetic_mG[1], magnetic_mG[2]);
 #endif
   
   if(!err){      

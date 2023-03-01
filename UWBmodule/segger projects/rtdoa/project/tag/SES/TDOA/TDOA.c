@@ -219,34 +219,34 @@ int tag_tdoa_run(void) {
 
         
         // Print RX
-        printBits(sizeof(uint8_t) * 5, &RX_TS[0][0]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[1][0]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[2][0]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[3][0]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[4][0]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[5][0]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[0][1]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[1][1]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[2][1]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[3][1]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[4][1]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[5][1]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[0][0]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[1][0]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[2][0]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[3][0]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[4][0]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[5][0]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[0][1]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[1][1]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[2][1]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[3][1]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[4][1]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[5][1]);
 
         // Print TX
-        printBits(sizeof(uint8_t) * 5, &RX_TS[0][2]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[1][2]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[2][2]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[3][2]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[4][2]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[5][2]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[0][3]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[1][3]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[2][3]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[3][3]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[4][3]);
-        printBits(sizeof(uint8_t) * 5, &RX_TS[5][3]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[0][2]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[1][2]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[2][2]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[3][2]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[4][2]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[5][2]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[0][3]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[1][3]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[2][3]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[3][3]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[4][3]);
+        //printBits(sizeof(uint8_t) * 5, &RX_TS[5][3]);
         
-        printf("\r\n");
+        //printf("\r\n");
         
         
         // Compute distances and print to UART
@@ -254,14 +254,14 @@ int tag_tdoa_run(void) {
 
         // Read acc data and print to UART
         // Blue LED blinks when reading new data.
-        vLIS2_TaskBypass();        
+        //vLIS2_TaskBypass();        
         
         memset(RX_TS, 0, sizeof(RX_TS[0][0]) * NUM_ANCH * 4);
 
-        if(idx >= 5000){
-          printf("Reached 5000 iter\n");
-          while(1);
-        }
+        //if(idx >= 5000){
+        //  printf("Reached 5000 iter\n");
+        //  while(1);
+        //}
 
 		//vTaskDelay(18);
 
