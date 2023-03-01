@@ -3,7 +3,7 @@ https://github.com/foldedtoad/dwm1001/tree/master/examples
 
 KF solo positioning on board{
 - lettura dati (DONE)
-- calibration + incertezze
+- calibration + incertezze (DONE)
 - KF
 
 

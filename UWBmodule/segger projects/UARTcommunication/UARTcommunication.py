@@ -69,7 +69,7 @@ stream_data_buf = []
 global acc_extreme_buf
 
 # serial interface
-port = "COM3"
+port = "COM4"
 br = 921600
 timeout = 0.01
 
@@ -77,6 +77,7 @@ timeout = 0.01
 mag_file = "./data/mag.csv"
 acc_file = "./data/acc.csv"
 acc_ex_file = "./data/acc_ex.csv"
+data_file = "./data/data.csv"
 
 # streaming 
 default_start_win = int(128)
@@ -478,7 +479,8 @@ def f_run_mag(ser: serial.Serial):
 
 def f_run_acc_mag(ser: serial.Serial):
     print("sending run_acc_mag request")
-    run_streaming(ser, STREAM_ACC_MAG, 0, True, 40)
+    run_streaming(ser, STREAM_ACC_MAG, 5000, False, 40)
+    save_data(stream_data_buf, data_file)
 
 
 def f_run_rtdoa(ser: serial.Serial):
@@ -503,7 +505,7 @@ def f_cal_acc(ser: serial.Serial):
 
     # compute scaling&offsetting
     scale = np.array([2000 / (max[i]-min[i]) for i in range(len(max))])
-    offset = np.array([1000 / scale[i] - max[i] for i in range(len(max))])
+    offset = np.array([max[i] - 1000 / scale[i] for i in range(len(max))])
     print(scale, offset)
 
     write_package_float(ser, ACC_BIAS, 3, offset.flatten())

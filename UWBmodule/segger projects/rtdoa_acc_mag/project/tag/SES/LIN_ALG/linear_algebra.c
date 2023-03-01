@@ -6,7 +6,7 @@
 * 
 * @attention This library works with flattened matrix;
 *            matrix are saved as vector with dimension row*columns;
-*            to access an elemnt in matrix[i][j]: flattened_matrix[i * columns + j]
+*            to access an elemnt in matrix[i*n + j]: flattened_matrix[i * columns + j]
 *
 *
 * @authors	Matteo Albi:            matteo.albi@studenti.unitn.it
@@ -19,7 +19,8 @@ void display_flat_matrix(const matrix_data_t *const matrix, const uint32_t r, co
     printf("dim: %dx%d\n",r,c);
     for(uint32_t i=0; i<r; i++){
         for(uint32_t j=0; j<c; j++){
-            printf("%f ", matrix[i * c + j]);
+            //printf("%4.3e ", matrix[i * c + j]);
+            printf("%1.3f ", matrix[i * c + j]);
         }
         printf("\n");
     }
@@ -54,7 +55,7 @@ void transpose(const matrix_data_t *const matrix, matrix_data_t *const t_matrix,
 
 
 void self_transpose(matrix_data_t *const matrix, const uint32_t r, const uint32_t c){
-    float tmp[r*c];
+    matrix_data_t tmp[r*c];
     transpose(matrix, tmp, r, c);
     memcpy(matrix, tmp, sizeof(matrix_data_t)*r*c);
 }
@@ -94,10 +95,9 @@ void matrix_mult_T(const matrix_data_t *const matrix_1, const matrix_data_t *con
 
 void quadratic_form(const matrix_data_t *const m1, const matrix_data_t *const m2, 
                     matrix_data_t *const q_form, const uint32_t r, const uint32_t c){
-    float tmp[r*c], tmp2[r*c];
+    matrix_data_t tmp[r*c];
     matrix_mult(m1, m2, tmp, r, c, c);
-    transpose(m1, tmp2, r, c);
-    matrix_mult(tmp, tmp2, q_form, r, r, c);
+    matrix_mult_T(tmp, m1, q_form, r, r, c);
 }
 
 
@@ -227,9 +227,10 @@ void adjoint(const matrix_data_t *const A, matrix_data_t *const adj, const uint3
 bool inverse(const matrix_data_t *const A, matrix_data_t *const inverse, const uint32_t dim){
     // Find determinant of A[][]
     matrix_data_t det = determinant(A, dim); 
-    if (det == 0)
-    {
-        printf("Singular matrix, can't find its inverse\n");
+    //display_flat_matrix(A, dim, dim);
+    //printf("|S|=%4.3e\r\n",det);
+    if (det == 0) {
+        printf("Singular matrix, can't find its inverse\r\n");
         return false;
     }
  
@@ -284,5 +285,155 @@ void v2diag_m(const matrix_data_t *const d, matrix_data_t *const A, const uint32
 }
 
 
+void qr_dec(const matrix_data_t *const A, const uint32_t r, const uint32_t c, 
+                    matrix_data_t *const Q, matrix_data_t *const R){
+    //set R to A
+    for(uint32_t i=0; i<r*c; i++) R[i] = A[i];
+    matrix_data_t Rtmp[r*c];
+    
+    uint32_t n;
+    if(r > c) n = c;
+    else n = r;
+
+    matrix_data_t v[r], tmp[r*r], hk[r*r];
+    matrix_data_t H_list[n][r*r];
+    matrix_data_t sign, vtv;
+    uint32_t v_dim;
+
+    for(uint32_t i=0; i<n; i++){
+        //extract column of R
+        for(uint32_t j=i; j<r; j++) v[j-i] = R[j*c + i];
+        v_dim = r-i;
+
+        //compute vk
+        sign = v[0] < 0 ? -1 : 1;
+        v[0] += sign * norm2(v, v_dim);
+
+        normalize(v, v_dim);
+
+        //compute H matrix
+        matrix_mult_T(v, v, tmp, v_dim, v_dim, 1);
+        for(uint32_t j=0; j<v_dim*v_dim; j++) tmp[j] *= -2;
+        for(uint32_t j=0; j<v_dim; j++) tmp[j * v_dim + j] += 1;
+
+        for(uint32_t j=0; j<r; j++){
+            for(uint32_t k=0; k<r; k++){
+                if(j >= i && k >= i) hk[j*r+k] = tmp[(j-i)*v_dim + (k-i)];
+                else if(j == k) hk[j*r+k] = 1;
+                else hk[j*r+k] = 0;
+            }
+        }
+
+        //store H matrix to compute Q
+        memcpy(H_list[i], hk, sizeof(matrix_data_t)*r*r);
+        //update R
+        matrix_mult(hk, R, Rtmp, r, c, r);
+        memcpy(R, Rtmp, sizeof(matrix_data_t)*r*c);
+
+    }
+
+    //compute Q
+    matrix_mult(H_list[0], H_list[1], Q, r, r, r);
+    for(uint32_t i=2; i<n; i++){
+        matrix_mult(Q, H_list[i], tmp, r, r, r);
+        memcpy(Q, tmp, sizeof(matrix_data_t)*r*r);
+    }
+
+}
 
 
+void lu_dec(const matrix_data_t *const A, const uint32_t n, 
+                    matrix_data_t *const L, matrix_data_t *const U){
+    uint32_t i = 0, j = 0, k = 0;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            if (j < i) L[j*n + i] = 0;
+            else {
+                L[j*n + i] = A[j*n + i];
+                for (k = 0; k < i; k++) L[j*n + i] -= L[j*n + k] * U[k*n + i];
+            }
+        }
+        for (j = 0; j < n; j++) {
+            if (j < i) U[i*n + j] = 0;
+            else if (j == i) U[i*n + j] = 1;
+            else {
+                U[i*n + j] = A[i*n + j] / L[i*n + i];
+                for (k = 0; k < i; k++)  U[i*n + j] -= L[i*n + k] * U[k*n + j] / L[i*n + i];
+            }
+        }
+    }
+}
+
+
+void backward_sub(const matrix_data_t *const U, const matrix_data_t *const B, 
+                 matrix_data_t *const res, const uint32_t n, const uint32_t c_b){
+            
+    matrix_data_t tmp;
+    // printf("start i loop\n");
+    for(uint32_t i=0; i<c_b; i++){ //col of res == col of B
+        // printf("start j loop with i:%d\n", i);
+        for(int j=n-1; j>=0; j--){ //row of res == row of U == row of B
+            tmp = 0;
+            // printf("start k loop with i:%d, j:%d\n", i, j);
+            for(int k=n-1; k>j; k--){ //col of U = row of res
+                tmp += U[j*n + k] * res[k*c_b + i];
+                // printf("i:%d j:%d k:%d\n",i,j,k);
+            }
+            
+            res[j*c_b + i] = (B[j*c_b + i] - tmp) / U[j*n + j];
+            // printf("%f\t%f\n",tmp,res[j*c_b + i]);
+        }
+        // printf("\n");
+    }
+    
+}
+
+
+void forward_sub(const matrix_data_t *const L, const matrix_data_t *const B, 
+                 matrix_data_t *const res, const uint32_t n, const uint32_t c_b){
+    matrix_data_t tmp;
+    
+    for(uint32_t j=0; j<n; j++){ //row of res == row of L == row of B
+        // printf("j: %d\n", j);
+        for(uint32_t i=0; i<c_b; i++){ //col of res == col of B
+            // printf("i: %d\n", i);
+            tmp = 0;
+            for(uint32_t k=0; k<j; k++){ //col of L = row of res
+                // printf("k: %d\n", k);
+                tmp += L[j*n + k] * res[k*c_b + i];
+            }
+            // printf("%f\n", tmp);
+            res[j*c_b + i] = (B[j*c_b + i] - tmp) / L[j*n + j];
+        }
+    }
+    
+}
+
+
+void matrix_l_divide(const matrix_data_t *const A, const matrix_data_t *const B, 
+                 matrix_data_t *const res, const uint32_t r_a, const uint32_t c_b, const uint32_t c_r_common){
+    
+    if(r_a == c_r_common){ //square A
+        // printf("matrix A is square, using LU decomposition\n");
+        matrix_data_t L[r_a*r_a], U[r_a*r_a], res_tmp[r_a*c_b];
+
+        lu_dec(A, r_a, L, U);
+        forward_sub(L, B, res_tmp, r_a, c_b);
+        backward_sub(U, res_tmp, res, r_a, c_b);
+    }
+
+}
+
+
+void matrix_r_divide(const matrix_data_t *const B, const matrix_data_t *const A, 
+                 matrix_data_t *const res, const uint32_t r_b, const uint32_t c_a, const uint32_t c_r_common){
+    
+    matrix_data_t B_t[r_b*c_r_common], A_t[c_r_common*c_a], res_t[r_b*c_a];
+
+    transpose(B, B_t, r_b, c_r_common);
+    transpose(A, A_t, c_r_common, c_a);
+    
+    matrix_l_divide(A_t, B_t, res_t, c_a, r_b, c_r_common);
+
+    transpose(res_t, res, c_a, r_b);
+}

@@ -1291,21 +1291,21 @@ int32_t lis2mdl_magnetic_raw_get_my(int16_t *val){
   ret |= err;
   err = lis2mdl_read_reg(LIS2MDL_OUTX_H_REG, &high_data, 1);
   ret |= err;
-  val[0] = (int16_t)(high_data * 256) + (int16_t)low_data;
+  val[0] = ((int16_t)high_data) * 256 + (int16_t)low_data;
 
   // Y-axis	
   err = lis2mdl_read_reg(LIS2MDL_OUTY_L_REG, &low_data, 1);
   ret |= err;
   err = lis2mdl_read_reg(LIS2MDL_OUTY_H_REG, &high_data, 1);
   ret |= err;
-  val[1] = (int16_t)(high_data * 256) + (int16_t)low_data;
+  val[1] = ((int16_t)high_data) * 256 + (int16_t)low_data;
 
   // Z-axis
   err = lis2mdl_read_reg(LIS2MDL_OUTZ_L_REG, &low_data, 1);
   ret |= err;
   err = lis2mdl_read_reg(LIS2MDL_OUTZ_H_REG, &high_data, 1);
   ret |= err;
-  val[2] = (int16_t)(high_data * 256) + (int16_t)low_data;
+  val[2] = ((int16_t)high_data) * 256 + (int16_t)low_data;
 
   return ret;
 }

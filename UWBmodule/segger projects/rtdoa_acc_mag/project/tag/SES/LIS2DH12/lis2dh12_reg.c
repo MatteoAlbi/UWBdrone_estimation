@@ -2933,9 +2933,9 @@ int32_t lis2dh_get_acc_calibrated(float *buf){
   
   if(!err){      
     // apply offset and scale
-    buf[0] =  (acceleration_mg[0] + acc_config->bias[0]) * acc_config->scale[0];
-    buf[1] =  (acceleration_mg[1] + acc_config->bias[1]) * acc_config->scale[1];
-    buf[2] =  (acceleration_mg[2] + acc_config->bias[2]) * acc_config->scale[2];
+    buf[0] =  (acceleration_mg[0] - acc_config->bias[0]) * acc_config->scale[0];
+    buf[1] =  (acceleration_mg[1] - acc_config->bias[1]) * acc_config->scale[1];
+    buf[2] =  (acceleration_mg[2] - acc_config->bias[2]) * acc_config->scale[2];
   }
 
   return err;

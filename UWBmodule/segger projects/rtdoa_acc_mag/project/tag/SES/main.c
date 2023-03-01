@@ -57,7 +57,8 @@ uint64_t	time		= 0;
 uint32_t        err;
 //TickType_t      dt, prev, now;
 
-float           eul[3], ret[16];
+float           eul[3], ret[16], uwb_data[3];
+TickType_t      pos_tick[2];
 
 TaskHandle_t main_task_handle;
 
@@ -66,24 +67,37 @@ void mainTask() {
   //vTaskDelay(12000);
   //pycom_start(10, 10000, 30000);
   
-  ekf_init(ret);
-  //prev = xTaskGetTickCount();
-  while (1) {
-    ekf_step(ret);
-    printf("\t\tq:\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t", ret[0], ret[1], ret[2], ret[3]);
-    ekf_quat2eul(ret, eul);
-    printf("\teul:\t%3.2f\t%3.2f\t%3.2f", eul[0], eul[1], eul[2]);
-    //printf("\taccG:\t%1.3f\t%1.3f\t%1.3f", ret[5], ret[6], ret[7]);
-    //printf("\text_acc_det: %f", ret[8]);
-    //printf("\tdt: %f", ret[4]);
-    printf("\r\n");
+  //ekf_init(ret);
+  ////prev = xTaskGetTickCount();
+  //while (1) {
+  //  ekf_step(ret);
+  //  //printf("\tq:\t%1.4f\t%1.4f\t%1.4f\t%1.4f\t", ret[0], ret[1], ret[2], ret[3]);
+  //  ekf_quat2eul(ret, eul);
+  //  printf("\teul:\t%3.2f\t%3.2f\t%3.2f\t", eul[0], eul[1], eul[2]);
+  //  //printf("\taccG:\t%1.3f\t%1.3f\t%1.3f", ret[5], ret[6], ret[7]);
+  //  //printf("\text_acc_det: %d", (int)ret[8]);
+  //  //printf("\tdt: %f", ret[4]);
+  //  printf("\r\n");
 
-    //now = xTaskGetTickCount();
-    //printf("\tdt: %d\r\n", now-prev);
-    //prev = now;
-    //nrf_delay_ms(10);
+  //  //now = xTaskGetTickCount();
+  //  //printf("\tdt: %d\r\n", now-prev);
+  //  //prev = now;
+  //  //nrf_delay_ms(10);
     
+  //}
+
+  while(1){
+    //err = tag_tdoa_run(uwb_data, &pos_tick[0]);
+    tag_tdoa_run(NULL,NULL);
+    //while(err) err = tag_tdoa_run(uwb_data, &pos_tick[0]);
+    //printf("%3.5f\t%3.5f\t%3.5f\t%d\r\n", uwb_data[0], uwb_data[1], uwb_data[2], pos_tick[0]);
   }
+  
+  //while(1){
+  //  lis2dh_get_acc(eul);
+  //  printf("acc:\t%3.4f\t%3.4f\t%3.4f\r\n", eul[0], eul[1], eul[2]);
+  //  nrf_delay_ms(10);
+  //}
 
 }
 
@@ -121,8 +135,8 @@ void uwb_recv_setup(void) {
 
 int main(void){  
         
-    //bsp_board_leds_init();
-    //bsp_board_led_on(GREEN_LED);
+    bsp_board_leds_init();
+    bsp_board_led_on(GREEN_LED);
     
     // init UART interface
     boUART_Init();
@@ -136,8 +150,8 @@ int main(void){
     nrf_delay_ms(BOOT_TIME);
     
     // init mag sensor
-    lis2mdl_init();
-    nrf_delay_ms(BOOT_TIME);
+    //lis2mdl_init();
+    //nrf_delay_ms(BOOT_TIME);
 
     // init flash data storage
     uint32_t err_code = man_fds_init();
@@ -156,7 +170,7 @@ int main(void){
     //}
     //printf("\r\n");
 
-    //uwb_recv_setup();
+    uwb_recv_setup();
     //ble_setup();	
 
     //nrf_gpio_pin_clear(13);

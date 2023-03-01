@@ -20,12 +20,21 @@ static float tmp_v1[NUM_ANCH];
 static float tmp_v2[NUM_ANCH];
 static float tmp_v3[NUM_ANCH];
 // Anchors position
-static float anchors_mat[6][3] = { {0,      0,      2.65},
-                                   {-1.840, 4.683,  2.961},
-                                   {2.160,  4.648,  2.632},
-                                   {8.085,  4.602,  2.938},
-                                   {7.626,  -1.416, 2.637},
-                                   {4.116,  -1.369, 2.735} };
+// MAC lab
+// static float anchors_mat[6][3] = { {0,      0,      2.65},
+//                                    {-1.840, 4.683,  2.961},
+//                                    {2.160,  4.648,  2.632},
+//                                    {8.085,  4.602,  2.938},
+//                                    {7.626,  -1.416, 2.637},
+//                                    {4.116,  -1.369, 2.735} };
+
+// ES lab
+static float anchors_mat[6][3] = { {3.00, 9.35, 3.15},
+                                   {0.00, 7.19, 2.15},
+                                   {0.00, 3.62, 3.15},
+                                   {0.00, 0.00, 2.15},
+                                   {4.79, 1.85, 3.15},
+                                   {4.79, 5.45, 2.15} };
 
 uint32_t rTDoA(uint64_t ts_param[NUM_ANCH][4], float* buf){
 
@@ -127,9 +136,9 @@ uint32_t rTDoA(uint64_t ts_param[NUM_ANCH][4], float* buf){
         }
     }
         
-    //printf("%f %f %f\r\n", tmp_v3[0], tmp_v3[1], tmp_v3[2]);
     if(buf != NULL) for(i=0; i<3; i++) buf[i] = (float)tmp_v3[i];
-
+    else printf("%f %f %f\r\n", tmp_v3[0], tmp_v3[1], tmp_v3[2]);
+    
     memset(tmp_m1_flat, 0, sizeof(tmp_m1_flat[0]) * NUM_ANCH * 4);
     memset(tmp_m2_flat, 0, sizeof(tmp_m2_flat[0]) * NUM_ANCH * 4);
     memset(tmp_v1,      0, sizeof(tmp_v1[0])      * NUM_ANCH);

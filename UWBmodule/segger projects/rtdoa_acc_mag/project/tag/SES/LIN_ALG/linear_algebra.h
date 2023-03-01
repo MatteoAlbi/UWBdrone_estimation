@@ -85,7 +85,7 @@ void self_transpose(matrix_data_t *const matrix, const uint32_t r, const uint32_
  * 
  * @param matrix_1      input matrix 1
  * @param matrix_2      input matrix 2
- * @param matrix_prod   matrix where save the result
+ * @param matrix_prod   matrix where save the result dim[r_1 * c_2]
  * @param r_1           number of rows of matrix_1
  * @param c_2           number of columns of matrix_2
  * @param r_c_common    number of rows of matrix_2 = number of columns of matrix_1
@@ -96,12 +96,12 @@ void matrix_mult(const matrix_data_t *const matrix_1, const matrix_data_t *const
 
 
 /**
- * @brief compute matrix multiplication matrix_1 * matrix_2.t (second matrix will be transposed)
+ * @brief compute matrix multiplication matrix_1 * matrix_2.t (second matrix is transposed)
  *        NB: matrix_prod must be different from matrix_1 and matrix_2
  * 
  * @param matrix_1      input matrix 1
  * @param matrix_2      input matrix 2
- * @param matrix_prod   matrix where save the result
+ * @param matrix_prod   matrix where save the result dim[r_1 * r_2]
  * @param r_1           number of rows of matrix_1
  * @param r_2           number of rows of matrix_2
  * @param c_c_common    number of columns of matrix_2 = number of columns of matrix_1
@@ -223,5 +223,108 @@ void get_diag(const matrix_data_t *const A, matrix_data_t *const d, const uint32
  */
 void v2diag_m(const matrix_data_t *const d, matrix_data_t *const A, const uint32_t n);
 
+
+/**
+ * @brief Compute QR decomposition of the given matrix: A=Q*R 
+ *        with Q orthogonal matrix and R upper triangular matrix
+ *      //http://matlab.izmiran.ru/help/techdoc/ref/mldivide.html
+ *      //https://rpubs.com/aaronsc32/qr-decomposition-householder
+ * 
+ * @param A matrix to decompose
+ * @param r rows of A
+ * @param c columns of A
+ * @param Q orthogonal matrix
+ * @param R upper triangular matrix
+ */
+void qr_dec(const matrix_data_t *const A, const uint32_t r, const uint32_t c, 
+            matrix_data_t *const Q, matrix_data_t *const R);
+
+
+//https://www.tutorialspoint.com/cplusplus-program-to-perform-lu-decomposition-of-any-matrix
+/**
+ * @brief Compute LU decomposition of the given matrix: A = L*U with
+ *        L lower triangular matrix and U upper triangular matrix
+ * 
+ * @param A matrix to decompose (must be square)
+ * @param n rows of A = columns of A
+ * @param L lower triangular matrix
+ * @param U upper triangular matrix
+ */
+void lu_dec(const matrix_data_t *const A, const uint32_t n, 
+            matrix_data_t *const L, matrix_data_t *const U);
+
+
+/**
+ * @brief Solve the system U*x=B using a backward substitution algorithm.
+ *        U must be an upper triangular square matrix (n*n) and B is the 
+ *        known terms matrix with number of rows equalt to U -> B is (n*c_b)
+ * 
+ * @param U     upper triangular matrix (n*n)
+ * @param B     known terms matrix (n*c_b)
+ * @param res   matrix where to save the result (n*c_b)
+ * @param n     dim of U
+ * @param c_b   columns of B
+ */
+void backward_sub(const matrix_data_t *const U, const matrix_data_t *const B, 
+                  matrix_data_t *const res, const uint32_t n, const uint32_t c_b);
+
+/**
+ * @brief Solve the system L*x=B using a forward substitution algorithm.
+ *        L must be a lower triangular square matrix (n*n) and B is the 
+ *        known terms matrix with number of rows equalt to L -> B is (n*c_b)
+ * 
+ * @param L     lower triangular matrix (n*n)
+ * @param B     known terms matrix (n*c_b)
+ * @param res   matrix where to save the result (n*c_b)
+ * @param n     dim of L
+ * @param c_b   columns of B
+ */
+void forward_sub(const matrix_data_t *const L, const matrix_data_t *const B, 
+                 matrix_data_t *const res, const uint32_t n, const uint32_t c_b);
+
+
+/**
+ * @brief computes the left division A\B, which corresponds to solve the 
+ *        linear equation system A*x=B. The columns of A must be equal 
+ *        the rows of B. The result has dimensions (r_a*c_b).
+ *        The functions solves the problem depending on the dimensions of the 
+ *        given matrices: 
+ *        
+ *        - A is a square matrix (r_a*c_r_common): the A amtrix is decomposed using
+ *          LU decomposition: A*x=B -> L*U*x = B. Then, the problem is solved by
+ *          subsequentially solving the two systems:
+ *              - L*(U*x) = B, thus solving it using forward substitution the system 
+ *                L*par=B equal to par=L\B
+ *              - U*x=par, thus solving it using backward substitution the system 
+ *                U*x=par equal to x=U\par
+ * 
+ * @param A             left hand division term (r_a*c_r_common)
+ * @param B             right hand division term (c_r_common*c_b)
+ * @param res           result (r_a*c_b)
+ * @param r_a           rows of A
+ * @param c_b           columns of B
+ * @param c_r_common    columsn of A = rows of B
+ */
+void matrix_l_divide(const matrix_data_t *const A, const matrix_data_t *const B, 
+                     matrix_data_t *const res, const uint32_t r_a, const uint32_t c_b, const uint32_t c_r_common);
+
+
+/**
+ * @brief computes the right division B/A translating it in a left 
+ *        division problem following the equality B/A = (A.t\B.t).t
+ *        where .t stands for transpose. The columns of A must be equal 
+ *        the rows of B. The result has dimensions (r_a*c_b).
+ *        The functions solves the problem depending on the dimensions of the 
+ *        given matrices: 
+ * 
+ * @param B             left hand division term (r_b*c_r_common)
+ * @param A             right hand division term (c_r_common*c_a)
+ * @param res           result (r_b*c_a)
+ * @param r_b           rows of B
+ * @param c_a           columns of A
+ * @param c_r_common    columsn of B = rows of A
+ */
+void matrix_r_divide(const matrix_data_t *const B, const matrix_data_t *const A, 
+                     matrix_data_t *const res, const uint32_t r_b, const uint32_t c_a, const uint32_t c_r_common);
 
 #endif
