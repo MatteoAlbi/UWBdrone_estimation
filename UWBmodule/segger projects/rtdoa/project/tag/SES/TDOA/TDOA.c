@@ -28,7 +28,7 @@
 /* -------------- Extern variables --------------------- */
 
 /* -------------- Private Functions --------------------- */
-int tag_tdoa_run(void);
+uint32_t tag_tdoa_run(float* buf, TickType_t * tick);
 static uint64 get_rx_timestamp_u64(void);
 static uint64 get_tx_timestamp_u64(void);
 static uint64 get_sys_timestamp_u64(void);
@@ -89,7 +89,7 @@ static uint64_t idx = 0;
 
 }*/
 
-int tag_tdoa_run(void) {
+uint32_t tag_tdoa_run(float* buf, TickType_t *tick) {
 
     while (seq_num < 6) {
 
@@ -211,6 +211,7 @@ int tag_tdoa_run(void) {
     //nrf_gpio_pin_clear(13);
 
     if (seq_num == 6){
+        if(tick != NULL) *tick = xTaskGetTickCount();
 
         nrf_gpio_pin_clear(13);
         seq_num = 0;
@@ -250,7 +251,7 @@ int tag_tdoa_run(void) {
         
         
         // Compute distances and print to UART
-        rTDoA(RX_TS);
+        rTDoA(RX_TS, buf);
 
         // Read acc data and print to UART
         // Blue LED blinks when reading new data.
@@ -264,10 +265,12 @@ int tag_tdoa_run(void) {
         //}
 
 		//vTaskDelay(18);
+        return 0;
 
     }
     else{
         //printf(":(\r\n");
+        return 1;
     }
 }
 

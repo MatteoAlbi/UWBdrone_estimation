@@ -160,7 +160,7 @@ void hamilton_prod(const ekf_data_t *const q1, const ekf_data_t *const q2, ekf_d
  * @param mat input
  * @param dst vector where to save the result
  */
-void inv4x4(const float * const mat, float * const dst);
+void inv4x4(const ekf_data_t * const mat, ekf_data_t * const dst);
 
 
 /**

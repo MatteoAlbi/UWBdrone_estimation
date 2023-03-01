@@ -57,8 +57,8 @@ uint64_t	time		= 0;
 uint32_t        err;
 //TickType_t      dt, prev, now;
 
-float           eul[3], ret[16], uwb_data[3];
-TickType_t      pos_tick[2];
+float           eul[3], ret[16], uwb_data[3], acc[3];
+TickType_t      pos_tick[2], cycle_tick;
 
 TaskHandle_t main_task_handle;
 
@@ -87,10 +87,15 @@ void mainTask() {
   //}
 
   while(1){
-    //err = tag_tdoa_run(uwb_data, &pos_tick[0]);
-    tag_tdoa_run(NULL,NULL);
-    //while(err) err = tag_tdoa_run(uwb_data, &pos_tick[0]);
-    //printf("%3.5f\t%3.5f\t%3.5f\t%d\r\n", uwb_data[0], uwb_data[1], uwb_data[2], pos_tick[0]);
+    err = tag_tdoa_run(uwb_data, &pos_tick[0]);
+    //tag_tdoa_run(NULL,NULL);
+    while(err) err = tag_tdoa_run(uwb_data, &pos_tick[0]);
+    printf("%3.3f\t%3.3f\t%3.3f\t%d\r\n", 
+            uwb_data[0], uwb_data[1], uwb_data[2], pos_tick[0]);
+    //lis2dh_get_acc(acc);
+    //cycle_tick = xTaskGetTickCount();
+    //printf("%3.3f\t%3.3f\t%3.3f\t%d\t%4.1f\t%4.1f\t%4.1f\t%d\r\n", 
+    //        uwb_data[0], uwb_data[1], uwb_data[2], pos_tick[0], acc[0], acc[1], acc[2], cycle_tick);
   }
   
   //while(1){

@@ -12,16 +12,16 @@
 
 #include "rTDoA_est.h"
 
-static float tmp1;
-static float tmp2;
-static float tmp_m1_flat[NUM_ANCH*4];
-static float tmp_m2_flat[NUM_ANCH*4];
-static float tmp_v1[NUM_ANCH];
-static float tmp_v2[NUM_ANCH];
-static float tmp_v3[NUM_ANCH];
+static double tmp1;
+static double tmp2;
+static double tmp_m1_flat[NUM_ANCH*4];
+static double tmp_m2_flat[NUM_ANCH*4];
+static double tmp_v1[NUM_ANCH];
+static double tmp_v2[NUM_ANCH];
+static double tmp_v3[NUM_ANCH];
 // Anchors position
 // MAC lab
-// static float anchors_mat[6][3] = { {0,      0,      2.65},
+// static double anchors_mat[6][3] = { {0,      0,      2.65},
 //                                    {-1.840, 4.683,  2.961},
 //                                    {2.160,  4.648,  2.632},
 //                                    {8.085,  4.602,  2.938},
@@ -37,13 +37,14 @@ static float anchors_mat[6][3] = { {3.00, 9.35, 3.15},
                                    {4.79, 5.45, 2.15} };
 
 uint32_t rTDoA(uint64_t ts_param[NUM_ANCH][4], float* buf){
-
+    
+    
     int i,j;
 
     //tx and rx values
     for(i=0; i<NUM_ANCH; i++){
         for(j=0; j<4; j++){
-            tmp_m1_flat[i * 4 + j] = (float) (ts_param[i][j] / TIME_CONST);
+            tmp_m1_flat[i * 4 + j] = (double) (ts_param[i][j] / TIME_CONST);
         }
     }
 
@@ -135,6 +136,7 @@ uint32_t rTDoA(uint64_t ts_param[NUM_ANCH][4], float* buf){
             tmp_v3[i] += tmp_m2_flat[i * (NUM_ANCH-1) + j]*(tmp_v1[j]-tmp_v2[j]);
         }
     }
+    
         
     if(buf != NULL) for(i=0; i<3; i++) buf[i] = (float)tmp_v3[i];
     else printf("%f %f %f\r\n", tmp_v3[0], tmp_v3[1], tmp_v3[2]);
