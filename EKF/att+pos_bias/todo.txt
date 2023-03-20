@@ -1,3 +1,0 @@
-comparison madgwick filter
-ekf su sensore
-ekf su python/C++ 

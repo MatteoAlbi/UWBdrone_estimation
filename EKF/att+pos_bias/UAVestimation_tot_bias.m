@@ -18,9 +18,9 @@ n = length(t);
 % -- Input variables
 
 % Input angular velocity
-omega_x = zeros(1,n);%0.1*sin(2*pi*t/10);
-omega_y = zeros(1,n);%0.2*cos(2*pi*t/4);
-omega_z = 1*ones(1,n);%0.4*sin(2*pi*t/3);
+omega_x = 0.1*sin(2*pi*t/10);
+omega_y = 0.2*cos(2*pi*t/4);
+omega_z = 0.4*sin(2*pi*t/3);
 triad = zeros(4,n);
 
 % Input motor acceleration

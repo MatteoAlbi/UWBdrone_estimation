@@ -19,22 +19,22 @@ static double tmp_m2_flat[NUM_ANCH*4];
 static double tmp_v1[NUM_ANCH];
 static double tmp_v2[NUM_ANCH];
 static double tmp_v3[NUM_ANCH];
-// Anchors position
+// Anchors position: first anchor is the master
 // MAC lab
-// static double anchors_mat[6][3] = { {0,      0,      2.65},
-//                                    {-1.840, 4.683,  2.961},
-//                                    {2.160,  4.648,  2.632},
-//                                    {8.085,  4.602,  2.938},
-//                                    {7.626,  -1.416, 2.637},
-//                                    {4.116,  -1.369, 2.735} };
+ static double anchors_mat[6][3] = {{0.313, 5.656, 2.427},
+                                    {0,     0,     1.982},
+                                    {8.120, 5.828, 2.467},
+                                    {9.737, 1.098, 1.902},
+                                    {2.657, 5.592, 1.738},
+                                    {4.561, 0.068, 2.409}};
 
 // ES lab
-static float anchors_mat[6][3] = { {3.00, 9.35, 3.15},
-                                   {0.00, 7.19, 2.15},
-                                   {0.00, 3.62, 3.15},
-                                   {0.00, 0.00, 2.15},
-                                   {4.79, 1.85, 3.15},
-                                   {4.79, 5.45, 2.15} };
+//static double anchors_mat[6][3] = { {3.00, 9.35, 3.15},
+//                                   {0.00, 7.19, 2.15},
+//                                   {0.00, 3.62, 3.15},
+//                                   {0.00, 0.00, 2.15},
+//                                   {4.79, 1.85, 3.15},
+//                                   {4.79, 5.45, 2.15} };
 
 uint32_t rTDoA(uint64_t ts_param[NUM_ANCH][4], float* buf){
     

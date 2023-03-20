@@ -267,14 +267,8 @@ def correctEllipsoid10(x, y, z):
         dA = -dA 
     
     soln = np.linalg.solve(A, beta[6:9].reshape(3,1))
-    V = -0.5 * soln
-    B = np.sqrt(np.abs(np.sum(np.array([A[0,0]*V[0]**2,
-                                        2*A[1,0]*V[1]*V[0],
-                                        2*A[2,0]*V[2]*V[0],
-                                        A[1,1]*V[1]**2,
-                                        A[2,1]*V[2]*V[1],
-                                        A[2,2]*V[2]**2,
-                                        -beta[-1]], dtype=float )))).item()
+    V = -0.5 * soln.flatten()
+    B = np.sqrt(np.abs(np.sum(np.array([A[0,0]*V[0]**2, 2*A[1,0]*V[1]*V[0], 2*A[2,0]*V[2]*V[0], A[1,1]*V[1]**2, A[2,1]*V[2]*V[1], A[2,2]*V[2]**2,  -beta[-1]], dtype=float )))).item()
     
     det3root = np.power(dA, (1/3))
     det6root = np.sqrt(det3root)

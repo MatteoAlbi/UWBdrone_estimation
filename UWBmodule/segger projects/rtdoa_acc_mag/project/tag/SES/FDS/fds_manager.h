@@ -176,6 +176,16 @@ ret_code_t man_fds_set_acc_bias(float* ab);
 
 
 /**
+ * @brief set the scale value of the local static variable man_fds_acc 
+ *        to the passed values
+ * 
+ * @param as value at which set the scale
+ * @return ret_code_t error code from man_fds_update_config
+ */
+ret_code_t man_fds_set_acc_scale(float* as);
+
+
+/**
  * @brief set the uncertainty value of the local static variable man_fds_acc 
  *        to the passed values
  * 

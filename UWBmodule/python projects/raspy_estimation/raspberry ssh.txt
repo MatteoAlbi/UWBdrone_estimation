@@ -1,0 +1,10 @@
+raspberry_drone
+user: user
+host: pi00.lan
+pass: raspberry
+
+
+raspberry_picar
+user: raspberry
+host: raspberry-picar.lan
+pass: raspberry

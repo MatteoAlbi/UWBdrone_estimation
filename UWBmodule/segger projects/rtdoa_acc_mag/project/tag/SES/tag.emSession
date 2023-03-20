@@ -69,17 +69,17 @@
  </TraceWindow>
  <Watch1>
   <Watches active="1" update="Never">
-   <Watchpoint expression="X_att" name="X_att" radix="-1" linenumber="55" filename="EKF/ekf.c"/>
-   <Watchpoint expression="P_att" name="P_att" radix="-1" linenumber="56" filename="EKF/ekf.c"/>
-   <Watchpoint expression="err" name="err" radix="-1" linenumber="752" filename="EKF/ekf.c"/>
-   <Watchpoint expression="Rz" name="Rz" radix="-1" linenumber="402" filename="EKF/ekf.c"/>
-   <Watchpoint expression="ret" name="ret" radix="-1" linenumber="71" filename="main.c"/>
-   <Watchpoint expression="acc_data" name="acc_data" radix="-1" linenumber="155" filename="EKF/ekf.c"/>
-   <Watchpoint expression="mag_data" name="mag_data" radix="-1" linenumber="178" filename="EKF/ekf.c"/>
-   <Watchpoint expression="mag_buff_iter" name="mag_buff_iter" radix="-1" linenumber="178" filename="EKF/ekf.c"/>
-   <Watchpoint expression="acc_norm_sigma" name="acc_norm_sigma" radix="-1" linenumber="157" filename="EKF/ekf.c"/>
-   <Watchpoint expression="J" name="J" radix="-1" linenumber="363" filename="EKF/ekf.c"/>
-   <Watchpoint expression="z" name="z" radix="-1" linenumber="553" filename="EKF/ekf.c"/>
+   <Watchpoint numelements="0" expression="X_att" evalMode="0" name="X_att" radix="-1" linenumber="55" filename="EKF/ekf.c" list=""/>
+   <Watchpoint numelements="0" expression="P_att" evalMode="0" name="P_att" radix="-1" linenumber="56" filename="EKF/ekf.c" list=""/>
+   <Watchpoint numelements="0" expression="err" evalMode="0" name="err" radix="-1" linenumber="752" filename="EKF/ekf.c" list=""/>
+   <Watchpoint numelements="0" expression="Rz" evalMode="0" name="Rz" radix="-1" linenumber="402" filename="EKF/ekf.c" list=""/>
+   <Watchpoint numelements="0" expression="ret" evalMode="0" name="ret" radix="-1" linenumber="71" filename="main.c" list=""/>
+   <Watchpoint numelements="0" expression="acc_data" evalMode="0" name="acc_data" radix="-1" linenumber="155" filename="EKF/ekf.c" list=""/>
+   <Watchpoint numelements="0" expression="mag_data" evalMode="0" name="mag_data" radix="-1" linenumber="178" filename="EKF/ekf.c" list=""/>
+   <Watchpoint numelements="0" expression="mag_buff_iter" evalMode="0" name="mag_buff_iter" radix="-1" linenumber="178" filename="EKF/ekf.c" list=""/>
+   <Watchpoint numelements="0" expression="acc_norm_sigma" evalMode="0" name="acc_norm_sigma" radix="-1" linenumber="157" filename="EKF/ekf.c" list=""/>
+   <Watchpoint numelements="0" expression="J" evalMode="0" name="J" radix="-1" linenumber="363" filename="EKF/ekf.c" list=""/>
+   <Watchpoint numelements="0" expression="z" evalMode="0" name="z" radix="-1" linenumber="553" filename="EKF/ekf.c" list=""/>
   </Watches>
  </Watch1>
  <Watch2>
@@ -92,29 +92,32 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="64" y="93" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="main.c" selected="1" top="85" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="14" y="232" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/EKF/ekf.c" useBinaryEdit="0" left="0" path="LIN_ALG/linear_algebra.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="14" y="24" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/LIN_ALG/linear_algebra.c" useBinaryEdit="0" left="0" path="LIN_ALG/linear_algebra.h" selected="0" top="12" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="40" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/RTDOA_EST/rTDoA_est.c" useBinaryEdit="0" left="0" path="RTDOA_EST/rTDoA_est.h" selected="0" top="27" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="53" y="200" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/main.c" useBinaryEdit="0" left="0" path="TDOA/TDOA.c" selected="0" top="187" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="19" y="20" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/TDOA/TDOA.c" useBinaryEdit="0" left="0" path="TDOA/TDOA.h" selected="0" top="6" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="28" y="533" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/main.c" useBinaryEdit="0" left="0" path="PY_COM/communication_python.c" selected="0" top="141" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="23" y="47" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/FDS/fds_manager.c" useBinaryEdit="0" left="0" path="FDS/fds_manager.h" selected="0" top="87" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="17" y="403" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/PY_COM/communication_python.c" useBinaryEdit="0" left="0" path="FDS/fds_manager.c" selected="0" top="399" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="5" y="287" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/main.c" useBinaryEdit="0" left="0" path="EKF/ekf.c" selected="0" top="885" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="52" y="162" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="EKF/ekf_pf.h" selected="0" top="141" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="25" y="30" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/EKF/ekf.c" useBinaryEdit="0" left="0" path="EKF/ekf.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="261" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/drivers_nrf/delay/nrf_delay.h" selected="0" top="248" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="11" y="1762" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/nRF5_SDK_14.2.0/external/freertos/source/include/task.h" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/external/freertos/source/tasks.c" selected="0" top="1736" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="19" y="1066" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/main.c" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/external/freertos/source/include/task.h" selected="0" top="1040" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer_freertos.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="2927" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/main.c" useBinaryEdit="0" left="0" path="LIS2DH12/lis2dh12_reg.c" selected="0" top="2914" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="721" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/drivers_nrf/twi_master/nrf_drv_twi.c" selected="0" top="709" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="4" y="1435" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/EKF/ekf.c" useBinaryEdit="0" left="0" path="LIS2MDL/lis2mdl_reg.c" selected="0" top="1417" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="4" y="138" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/TDOA/TDOA.c" useBinaryEdit="0" left="0" path="RTDOA_EST/rTDoA_est.c" selected="0" top="10" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="8" y="1083" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/LIS2DH12/lis2dh12_reg.c" useBinaryEdit="0" left="0" path="LIS2DH12/lis2dh12_reg.h" selected="0" top="1072" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="191" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/external/freertos/portable/CMSIS/nrf52/port_cmsis.c" selected="0" top="21" codecName=""/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="8" y="6" useTextEdit="1" openedFrom="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/RTDOA_EST/rTDoA_est.c" useBinaryEdit="0" left="0" path="../../common/config.h" selected="0" top="57" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="89" useTextEdit="1" useBinaryEdit="0" left="0" path="main.c" selected="0" top="85" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="232" useTextEdit="1" useBinaryEdit="0" left="0" path="LIN_ALG/linear_algebra.c" selected="0" top="211" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="54" useTextEdit="1" useBinaryEdit="0" left="0" path="LIN_ALG/linear_algebra.h" selected="0" top="38" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="10" y="56" useTextEdit="1" useBinaryEdit="0" left="0" path="RTDOA_EST/rTDoA_est.h" selected="0" top="54" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="239" useTextEdit="1" useBinaryEdit="0" left="0" path="TDOA/TDOA.c" selected="0" top="226" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="20" useTextEdit="1" useBinaryEdit="0" left="0" path="TDOA/TDOA.h" selected="0" top="6" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="461" useTextEdit="1" useBinaryEdit="0" left="0" path="PY_COM/communication_python.c" selected="0" top="440" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="178" useTextEdit="1" useBinaryEdit="0" left="0" path="FDS/fds_manager.h" selected="0" top="171" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="93" useTextEdit="1" useBinaryEdit="0" left="0" path="FDS/fds_manager.c" selected="0" top="93" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="287" useTextEdit="1" useBinaryEdit="0" left="0" path="EKF/ekf.c" selected="0" top="266" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="162" useTextEdit="1" useBinaryEdit="0" left="0" path="EKF/ekf_pf.h" selected="0" top="141" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="30" useTextEdit="1" useBinaryEdit="0" left="0" path="EKF/ekf.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="261" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/drivers_nrf/delay/nrf_delay.h" selected="0" top="248" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1762" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/external/freertos/source/tasks.c" selected="0" top="1736" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1066" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/external/freertos/source/include/task.h" selected="0" top="1040" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer_freertos.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="2927" useTextEdit="1" useBinaryEdit="0" left="0" path="LIS2DH12/lis2dh12_reg.c" selected="0" top="2914" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="721" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/drivers_nrf/twi_master/nrf_drv_twi.c" selected="0" top="709" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1435" useTextEdit="1" useBinaryEdit="0" left="0" path="LIS2MDL/lis2mdl_reg.c" selected="0" top="1417" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="59" y="28" useTextEdit="1" useBinaryEdit="0" left="0" path="RTDOA_EST/rTDoA_est.c" selected="1" top="10" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1096" useTextEdit="1" useBinaryEdit="0" left="0" path="LIS2DH12/lis2dh12_reg.h" selected="0" top="1092" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="191" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/external/freertos/portable/CMSIS/nrf52/port_cmsis.c" selected="0" top="21" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="6" useTextEdit="1" useBinaryEdit="0" left="0" path="../../common/config.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="PY_COM/communication_python.h" selected="0" top="12" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="147" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/fds/fds.h" selected="0" top="141" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/external/freertos/source/queue.c" selected="0" top="0" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="tag" fileDialogDefaultFilter="*.c;*.h" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/EKF" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="tag" fileDialogDefaultFilter="*.c;*.h" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" debugSearchFileMap="" fileDialogInitialDirectory="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/EKF" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>
