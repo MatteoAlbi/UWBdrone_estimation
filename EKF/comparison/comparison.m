@@ -87,8 +87,8 @@ end
 gamma = [0.004; -0.006; 0.007];
 % -- Gyroscope
 %mu_g = zeros(3,1);
-%mu_g = (rand(3,1) + rand(3,1).*sin(2*pi*t/100)*BiasScale); %bias
-mu_g = t .* gamma;
+mu_g = (rand(3,1) + rand(3,1)/10.*sin(2*pi*t/100)*BiasScale); %bias
+%mu_g = t .* gamma;
 sigma_mu_g = NoiseScale*rand(3,1)*BiasScale; %bias uncert
 Rbg = diag(sigma_mu_g.^2); %bias cov
 
@@ -229,6 +229,9 @@ end
 
 
 %% Plots
+eul_ekf = quat2eul(X_att_ekf(1:4,:)', "XYZ")' * 180/pi;
+eul_mad = quat2eul(X_att_mad(1:4,:)', "XYZ")' * 180/pi;
+eul_true = quat2eul(q.', "XYZ").' * 180/pi;
 
 FigID = 0;
 
@@ -243,27 +246,24 @@ FigID = 0;
 
 FigID = FigID + 1;
 figure(FigID), clf, hold on;
-plot(t, q(1,:));
-plot(t, q(2,:));
-plot(t, q(3,:));
-plot(t, q(4,:));
-plot(t, X_att_ekf(1,:));
-plot(t, X_att_ekf(2,:));
-plot(t, X_att_ekf(3,:));
-plot(t, X_att_ekf(4,:));
-legend('q_0', 'q_1', 'qe_2', 'q_3', 'qe_0', 'qe_1', 'qe_2', 'qe_3', 'Location', 'best');
+plot(t, eul_true(1,:));
+plot(t, eul_true(2,:));
+plot(t, eul_true(3,:));
+plot(t, eul_ekf(1,:));
+plot(t, eul_ekf(2,:));
+plot(t, eul_ekf(3,:));
+legend('\phi_{ekf}', '\theta_{ekf}', '\psi_{ekf}', '\phi_{true}', '\theta_{true}', '\psi_{true}', 'Location', 'best');
 xlabel('t [s]');
 title("attitude EKF");
 
 FigID = FigID + 1;
 figure(FigID), clf, hold on;
-plot(t, abs(q(1,:) - X_att_ekf(1,:)));
-plot(t, abs(q(2,:) - X_att_ekf(2,:)));
-plot(t, abs(q(3,:) - X_att_ekf(3,:)));
-plot(t, abs(q(4,:) - X_att_ekf(4,:)));
-legend('e_0', 'e_1', 'e_2', 'e_3', 'Location', 'best');
+plot(t, abs(eul_true(1,:) - eul_ekf(1,:)));
+plot(t, abs(eul_true(2,:) - eul_ekf(2,:)));
+plot(t, abs(eul_true(3,:) - eul_ekf(3,:)));
+legend('\phi_{err}', '\theta_{err}', '\psi_{err}', 'Location', 'best');
 xlabel('t [s]');
-ylabel('Absolute errors');
+ylabel('Absolute errors [deg]');
 set(gca, 'YScale', 'log');
 title("attitude estimation error EKF");
 
@@ -277,6 +277,7 @@ plot(t, X_att_ekf(6,:));
 plot(t, X_att_ekf(7,:));
 legend('mu_g_x', 'mu_g_y', 'mu_g_z', 'mu_g_x_est', 'mu_g_y_est', 'mu_g_z_est', 'Location', 'best');
 xlabel('t [s]');
+ylabel('Gyroscope bias [rad/s]');
 title("gyro bias EKF");
 
 FigID = FigID + 1;
@@ -286,33 +287,30 @@ plot(t, abs(mu_g(2,:) - X_att_ekf(6,:)));
 plot(t, abs(mu_g(3,:) - X_att_ekf(7,:)));
 legend('e_x', 'e_y', 'e_z', 'Location', 'best');
 xlabel('t [s]');
-ylabel('Absolute errors');
+ylabel('Absolute errors [rad/s]');
 set(gca, 'YScale', 'log');
 title("gyro bias estimation error EKF");
 
 FigID = FigID + 1;
 figure(FigID), clf, hold on;
-plot(t, q(1,:));
-plot(t, q(2,:));
-plot(t, q(3,:));
-plot(t, q(4,:));
-plot(t, X_att_mad(1,:));
-plot(t, X_att_mad(2,:));
-plot(t, X_att_mad(3,:));
-plot(t, X_att_mad(4,:));
-legend('q_0', 'q_1', 'qe_2', 'q_3', 'qe_0', 'qe_1', 'qe_2', 'qe_3', 'Location', 'best');
+plot(t, eul_mad(1,:));
+plot(t, eul_mad(2,:));
+plot(t, eul_mad(3,:));
+plot(t, eul_true(1,:));
+plot(t, eul_true(2,:));
+plot(t, eul_true(3,:));
+legend('\phi_{mad}', '\theta_{mad}', '\psi_{mad}', '\phi_{true}', '\theta_{true}', '\psi_{true}', 'Location', 'best');
 xlabel('t [s]');
 title("attitude Madgwick");
 
 FigID = FigID + 1;
 figure(FigID), clf, hold on;
-plot(t, abs(q(1,:) - X_att_mad(1,:)));
-plot(t, abs(q(2,:) - X_att_mad(2,:)));
-plot(t, abs(q(3,:) - X_att_mad(3,:)));
-plot(t, abs(q(4,:) - X_att_mad(4,:)));
-legend('e_0', 'e_1', 'e_2', 'e_3', 'Location', 'best');
+plot(t, abs(eul_true(1,:) - eul_mad(1,:)));
+plot(t, abs(eul_true(2,:) - eul_mad(2,:)));
+plot(t, abs(eul_true(3,:) - eul_mad(3,:)));
+legend('\phi_{err}', '\theta_{err}', '\psi_{err}', 'Location', 'best');
 xlabel('t [s]');
-ylabel('Absolute errors');
+ylabel('Absolute errors [deg]');
 set(gca, 'YScale', 'log');
 title("attitude estimation error Madgwick");
 

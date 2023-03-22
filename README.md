@@ -5,9 +5,10 @@ This project aims to build an algorithm to estimate position and pose of a drone
 ## Description
 
 The project consists in three steps:
-1. Program the UWB module [dwm1001C](https://www.qorvo.com/products/p/DWM1001C) to run an rTDoA algorithm for the localization of the drone and read data from an internal accelerometer sensor, then output both via UART.
+1. Program the UWB module [dwm1001C](https://www.qorvo.com/products/p/DWM1001C) to run an rTDoA algorithm for the localization of the drone it via UART.
 2. Build an Extended Kalmann Filter to estimate pose and position of the drone based on the available sensors.
-3. Assemble the first two steps using ROS2.
+3. Possibly, run the EKF on board the UWB module by installing the needed sensors.
+
 
 ## UWB module
 

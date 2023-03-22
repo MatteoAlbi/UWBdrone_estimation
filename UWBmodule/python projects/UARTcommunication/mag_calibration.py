@@ -299,17 +299,26 @@ if __name__ == "__main__":
     print("calibration with gh:\nHI:\n", hi_gh, "\nSI:\n", si_gh, "\nresiduals: ", model_err(si_gh, hi_gh, F, data_np))
     print("calibration with ml:\nHI:\n", hi_ml, "\nSI:\n", si_ml, "\nresiduals: ", model_err(si_ml, hi_ml, expMFS, data_np))
 
-    plt.rcParams["figure.autolayout"] = True
-    fig, (ax1, ax2) = plt.subplots(1, 2, subplot_kw={'projection': '3d'})
+    # plt.rcParams["figure.autolayout"] = True
+    # fig, (ax1, ax2) = plt.subplots(2, 1, subplot_kw={'projection': '3d'})
 
-    # gh data
-    ax1.scatter(data_np[:,0], data_np[:,1], data_np[:,2], marker='o', color='r')
-    ax1.scatter(cal_data_gh[:,0], cal_data_gh[:,1], cal_data_gh[:,2], marker='o', color='g')
-    ax1.axis('equal')
-    #ax1.legend(("original", "git_hub"))
-    # ml data
-    ax2.scatter(data_np[:,0], data_np[:,1], data_np[:,2], marker='o', color='r')
-    ax2.scatter(cal_data_ml[:,0], cal_data_ml[:,1], cal_data_ml[:,2], marker='o', color='b')
-    ax2.axis('equal')
+    # # gh data
+    # ax1.scatter(data_np[:,0], data_np[:,1], data_np[:,2], marker='o', color='r')
+    # ax1.scatter(cal_data_gh[:,0], cal_data_gh[:,1], cal_data_gh[:,2], marker='o', color='g')
+    # ax1.axis('equal')
+    # #ax1.legend(("original", "git_hub"))
+    # # ml data
+    # ax2.scatter(data_np[:,0], data_np[:,1], data_np[:,2], marker='o', color='r')
+    # ax2.scatter(cal_data_ml[:,0], cal_data_ml[:,1], cal_data_ml[:,2], marker='o', color='b')
+    # ax2.axis('equal')
+
+    # plt.show()
+    
+    fig, ax = plt.subplots(subplot_kw={'projection': '3d'})
+    ax.scatter(data_np[:,0], data_np[:,1], data_np[:,2], marker='o', color='r',label="noisy data")
+    ax.scatter(cal_data_ml[:,0], cal_data_ml[:,1], cal_data_ml[:,2], marker='o', color='g',label="calibrated data")
+    ax.axis('equal')
+    ax.legend()
+    ax.grid(True)
 
     plt.show()
