@@ -1,5 +1,7 @@
 from ast import Try
 
+# splits data in log_all.txt between acc, rx1, rx2, tx1, tx2, uwb
+
 '''
 bit print order
         rx1 rx2 tx1 tx2

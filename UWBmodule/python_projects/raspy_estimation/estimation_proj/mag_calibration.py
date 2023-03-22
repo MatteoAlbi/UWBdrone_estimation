@@ -23,6 +23,12 @@ F = 380.01155
 # -- accessories functions
 
 def model_err(Winv, V, B, data):
+    # compute model error (matlab)
+    # Winv      mag soft iron
+    # V         mag hard iron
+    # B         magnetomer vector norm
+    # data      test dataset
+
     Vmat = np.vstack((np.ones(len(data)) * V[0], np.ones(len(data)) * V[1], np.ones(len(data)) * V[2]))
     spherept = (Winv @ (data.T - Vmat)).T
     radsq = np.sum(np.square(spherept), 1)
@@ -34,10 +40,17 @@ def model_err(Winv, V, B, data):
 
 
 def is_pos_def(x):
+    # check if given matrix is positive definite
+    
     return np.all(np.linalg.eigvals(x) > 0)
 
 
 def correct_data(data, hi, si):
+    # calibrate data given fard and soft iron
+    # data      data to calibrate
+    # hi        mag hard iron
+    # si        mag soft iron
+    
     hi_mat = np.vstack((np.ones(len(data)) * hi[0], np.ones(len(data)) * hi[1], np.ones(len(data)) * hi[2]))
     corrected_data = (data - hi_mat.T) @ si
 
@@ -305,17 +318,17 @@ if __name__ == "__main__":
     print("calibration with gh:\nHI:\n", hi_gh, "\nSI:\n", si_gh, "\nresiduals: ", model_err(si_gh, hi_gh, F, data_np))
     print("calibration with ml:\nHI:\n", hi_ml, "\nSI:\n", si_ml, "\nresiduals: ", model_err(si_ml, hi_ml, expMFS, data_np))
 
-    plt.rcParams["figure.autolayout"] = True
-    fig, (ax1, ax2) = plt.subplots(1, 2, subplot_kw={'projection': '3d'})
+    # plt.rcParams["figure.autolayout"] = True
+    # fig, (ax1, ax2) = plt.subplots(1, 2, subplot_kw={'projection': '3d'})
 
-    # gh data
-    ax1.scatter(data_np[:,0], data_np[:,1], data_np[:,2], marker='o', color='r')
-    ax1.scatter(cal_data_gh[:,0], cal_data_gh[:,1], cal_data_gh[:,2], marker='o', color='g')
-    ax1.axis('equal')
-    #ax1.legend(("original", "git_hub"))
-    # ml data
-    ax2.scatter(data_np[:,0], data_np[:,1], data_np[:,2], marker='o', color='r')
-    ax2.scatter(cal_data_ml[:,0], cal_data_ml[:,1], cal_data_ml[:,2], marker='o', color='b')
-    ax2.axis('equal')
+    # # gh data
+    # ax1.scatter(data_np[:,0], data_np[:,1], data_np[:,2], marker='o', color='r')
+    # ax1.scatter(cal_data_gh[:,0], cal_data_gh[:,1], cal_data_gh[:,2], marker='o', color='g')
+    # ax1.axis('equal')
+    # #ax1.legend(("original", "git_hub"))
+    # # ml data
+    # ax2.scatter(data_np[:,0], data_np[:,1], data_np[:,2], marker='o', color='r')
+    # ax2.scatter(cal_data_ml[:,0], cal_data_ml[:,1], cal_data_ml[:,2], marker='o', color='b')
+    # ax2.axis('equal')
 
-    plt.show()
+    # plt.show()

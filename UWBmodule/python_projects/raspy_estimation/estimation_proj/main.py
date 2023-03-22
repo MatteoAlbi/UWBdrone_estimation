@@ -91,6 +91,13 @@ def save_data(data, file_name):
 
 
 def open_serial(port: str, desc: str, br: int, timeout: float) -> serial.Serial:
+    # open serial connection by checking 
+    # port          port name
+    # desc          port description
+    # br            baud rate
+    # timeout       serial port timeout
+    # return: serial interface object connected to tag
+    
     ser = serial.Serial()
     ser.baudrate = br
     ser.timeout = timeout
@@ -128,6 +135,10 @@ def open_serial(port: str, desc: str, br: int, timeout: float) -> serial.Serial:
 # -- task management
 
 def f_run_acc(filt: EKF, wait_ms = 10):
+    # print accelerometer data to terminal
+    # filt          EKF filter instance
+    # wait_ms       wiat time between data collection [ms]
+    
     try:
         while(True): 
             print(filt.get_acc_calibrated())
@@ -137,6 +148,10 @@ def f_run_acc(filt: EKF, wait_ms = 10):
 
 
 def f_run_mag(filt: EKF, wait_ms = 10):
+    # print magnetometer data to terminal
+    # filt          EKF filter instance
+    # wait_ms       wiat time between data collection [ms]
+    
     try:
         while(True): 
             print(filt.get_mag_calibrated())
@@ -146,6 +161,10 @@ def f_run_mag(filt: EKF, wait_ms = 10):
        
             
 def f_run_gyro(filt: EKF, wait_ms = 10):
+    # print gyroscope data to terminal
+    # filt          EKF filter instance
+    # wait_ms       wiat time between data collection [ms]
+    
     try:
         while(True): 
             print(filt.get_gyro_calibrated())
@@ -155,6 +174,10 @@ def f_run_gyro(filt: EKF, wait_ms = 10):
 
 
 def f_run_imu(filt: EKF, wait_ms = 10):
+    # print imu data to terminal
+    # filt          EKF filter instance
+    # wait_ms       wiat time between data collection [ms]
+    
     try:
         while(True): 
             print(filt.get_imu())
@@ -163,12 +186,16 @@ def f_run_imu(filt: EKF, wait_ms = 10):
         print("Task interrupted")
 
 
-def f_run_uwb(filt: EKF, wait_ms = 10):
+def f_run_uwb(filt: EKF, wait_ms = 0):
+    # print uwb data to terminal
+    # filt          EKF filter instance
+    # wait_ms       wiat time between data collection [ms]
+    
     try:
         while(True): 
             x,y,z,t = filt.get_uwb()
             if(x != None): print(x,y,z,t)
-            #time.sleep(wait_ms/1000)
+            time.sleep(wait_ms/1000)
     except KeyboardInterrupt:
         print("Task interrupted")
 
@@ -182,30 +209,52 @@ def f_cal_acc(filt: EKF):
 
 
 def f_cal_acc_unc(filt: EKF):
+    # compute acceletometer uncertainty
+    # filt          EKF filter instance
+    
     filt.cal_acc_unc()
 
 
 def f_cal_mag(filt: EKF):
+    # compute magnetometer sof and hard iron
+    # filt          EKF filter instance
+    
     filt.cal_mag()
     
     
 def f_cal_mag_unc(filt: EKF):
+    # compute magnetometer uncertainty
+    # filt          EKF filter instance
+    
     filt.cal_mag_unc()
     
     
 def f_cal_gyro(filt: EKF):
+    # compute gyroscope uncertainty and bias
+    # filt          EKF filter instance
+    
     filt.cal_gyro()
     
 
 def f_cal_uwb(filt: EKF):
+    # compute UWB uncertainty
+    # filt          EKF filter instance
+    
     filt.cal_uwb_unc()
     
     
 def f_cal_unc_all(filt: EKF):
+    # compute all sensors uncertainties
+    # filt          EKF filter instance
+    
     filt.cal_unc_all()
 
 
 def collect_data(filt: EKF, round_prec = 6):
+    # collect imu and uwb data, saving them on data_file
+    # filt          EKF filter instance
+    # round_prec    decimal digits of saved data
+    
     data = []
     try:
         while(True):

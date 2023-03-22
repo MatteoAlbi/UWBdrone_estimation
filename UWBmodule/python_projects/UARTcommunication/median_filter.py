@@ -1,5 +1,9 @@
 import numpy as np
 
+'''
+Implementation of a median filter
+'''
+
 class Median_filter:
 
     def __init__(self, N :int, name :str, dtype: np.dtype):
@@ -19,13 +23,16 @@ class Median_filter:
         return self.buf
 
     def is_full(self):
+        # ret true if filter buffer is full
         return self.N == self.n_el
 
     def add_el(self, el):
+        # add element to fitler buffer
         self.buf = np.append(self.buf[1:],el)
         self.n_el = min(self.N, self.n_el + 1)
 
     def filter(self):
+        # return filtered data
         return np.take(np.sort(self.buf), self.buf.size // 2)
 
 

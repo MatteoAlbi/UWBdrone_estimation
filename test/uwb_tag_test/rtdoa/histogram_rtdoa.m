@@ -1,6 +1,8 @@
 clc;
 clear all;
 
+% display histograms of uwb computed position, reporting difference with real position (from motion capture)
+
 log = importdata("log_filtered.txt");
 
 x = log(:,1);

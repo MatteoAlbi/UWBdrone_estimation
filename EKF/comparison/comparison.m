@@ -2,6 +2,8 @@ clear all;
 close all;
 clc;
 
+% Comparison between Madgwick filter and EKF
+
 % experiment parameters
 NoiseScale = 1e-1;
 BiasScale = 1e-1;

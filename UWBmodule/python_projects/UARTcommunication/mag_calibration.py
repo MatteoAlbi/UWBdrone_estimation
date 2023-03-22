@@ -2,6 +2,10 @@ import numpy as np
 from scipy import linalg
 from matplotlib import pyplot as plt
 
+'''
+Implementation of 2 different algorithms for ellipsoid fitting for magnetometer calibration
+'''
+
 
 BOOL_DEBUG = True
 
@@ -23,6 +27,12 @@ F = 380.01155
 # -- accessories functions
 
 def model_err(Winv, V, B, data):
+    # compute model error (matlab)
+    # Winv      mag soft iron
+    # V         mag hard iron
+    # B         magnetomer vector norm
+    # data      test dataset
+    
     Vmat = np.vstack((np.ones(len(data)) * V[0], np.ones(len(data)) * V[1], np.ones(len(data)) * V[2]))
     spherept = (Winv @ (data.T - Vmat)).T
     radsq = np.sum(np.square(spherept), 1)
@@ -34,10 +44,16 @@ def model_err(Winv, V, B, data):
 
 
 def is_pos_def(x):
+    # check if given matrix is positive definite
     return np.all(np.linalg.eigvals(x) > 0)
 
 
 def correct_data(data, hi, si):
+    # calibrate data given fard and soft iron
+    # data      data to calibrate
+    # hi        mag hard iron
+    # si        mag soft iron
+    
     hi_mat = np.vstack((np.ones(len(data)) * hi[0], np.ones(len(data)) * hi[1], np.ones(len(data)) * hi[2]))
     corrected_data = (data - hi_mat.T) @ si
 

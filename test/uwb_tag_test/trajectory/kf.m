@@ -1,6 +1,8 @@
 clc;
 clear all;
 
+%% kf to estimate trajectory from uwb and acc data
+
 %n_samples = length(log_acc);
 n_samples = 1266;
 step = 1:n_samples;

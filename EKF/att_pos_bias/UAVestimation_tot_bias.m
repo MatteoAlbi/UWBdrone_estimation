@@ -284,11 +284,6 @@ for k=1:n-1
     X_att(1:4, k+1) = X_att(1:4, k+1)/norm(X_att(1:4, k+1)); 
 %     X_att(5:7, k+1) = 0.2*X_att(5:7, k+1) + 0.8*prev_bias;
 
-    % ensure 1st component of quaternion is positive
-    if X_att(1) < 0
-        X_att(1:4) = -X_att(1:4);
-    end
-
     % -- POSITION
     [aW, J_Xpos, J_Upos, aM_est(k+1)] = func_aW(X_att(1:4, k+1), a_bar(:,k+1), X_pos(5:7,k), dt, A);
 

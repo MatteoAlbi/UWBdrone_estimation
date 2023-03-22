@@ -1,5 +1,6 @@
 from ast import Try
 
+# filters log_rtdoa.txt eliminating failed/wrong computation, save filtered data on log_filtered.txt
 
 log = open("log_rtdoa.txt","r")
 out = open("log_filtered.txt","w")

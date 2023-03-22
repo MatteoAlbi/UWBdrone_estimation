@@ -67,7 +67,7 @@ mag_rec = zeros(3, n);
 gyro_rec = zeros(3, n);
 uwb_rec = zeros(3, n);
 
-%% build t vectors
+%% build time vectors
 t_ekf = zeros(1, n);
 
 tmp = split(data{2}, ';')';
@@ -119,6 +119,7 @@ t_true = (0:1:Measurement6.Frames-1) ./ Measurement6.FrameRate;
 ekf = EKF2(ra,rm,rg,rg./100,ru,hi,si,ab,as);
 
 %init states
+% pos
 k = 1;
 tmp = split(data{k}, ';')';
 tmp = cellfun(@str2num,tmp(1:end-1),'un',0).';
@@ -132,7 +133,7 @@ acc_rec(:,k) = NaN(3,1);
 mag_rec(:,k) = NaN(3,1);
 gyro_rec(:,k) = NaN(3,1);
 
-
+% att
 k = 2;
 tmp = split(data{k}, ';')';
 tmp = cellfun(@str2num,tmp(1:end-1),'un',0).';
@@ -148,6 +149,7 @@ acc_rec(:,k) = reshape(acc, 3,1);
 mag_rec(:,k) = reshape(mag, 3,1);
 gyro_rec(:,k) = reshape(gyro, 3,1);
 
+% acc filtering using moving avg (init)
 for i=1:buf_len
     buf_acc(:,i) = acc;
 end
@@ -184,7 +186,8 @@ for k=3:n
         mag_rec(:,k) = reshape(mag, 3,1);
         gyro_rec(:,k) = reshape(gyro, 3,1);
     end
-
+    
+    % log results
     q_ekf(:,k) = ekf.get_att();
     gyro_b_ekf(:,k) = ekf.get_g_b();
     p_ekf(:,k) = ekf.get_pos();

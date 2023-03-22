@@ -8,7 +8,7 @@ anchors position: {0,0,2.65},               #6 (master)
                   {4.116, -1.369, 2.735} }; #5
 
 real value: 	4.122 1.738 1.160    	rtdoa result
-real value: 	4.043 1.935 1.213 	timestamps and acc
+real value: 	4.043 1.935 1.213 	    timestamps and acc
 real value:		4.067 2.012 1.206       all
 
 

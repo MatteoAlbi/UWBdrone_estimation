@@ -67,7 +67,7 @@ mag_rec = zeros(3, n);
 gyro_rec = zeros(3, n);
 uwb_rec = zeros(3, n);
 
-%% build t vectors
+%% build time vectors
 t_ekf = zeros(1, n);
 
 tmp = split(data{2}, ';')';
@@ -112,6 +112,7 @@ t_ekf = t_ekf - t_ekf(1);
 
 t_true = (0:1:Measurement6.Frames-1) ./ Measurement6.FrameRate;
 
+
 %% Filter acc data
 for k=1:n
     % extract data from row
@@ -129,6 +130,7 @@ for k=1:n
 
 end
 
+%add missing data
 acc_rec(:,1) = acc_rec(:,2);
 for i=2:length(acc_rec)
     if all(isnan(acc_rec(:,i)))
@@ -136,14 +138,15 @@ for i=2:length(acc_rec)
     end
 end
 fs = length(t_ekf)/t_ekf(end);
-acc_filt = lowpass(acc_rec',0.01)';
+acc_filt = lowpass(acc_rec',0.01)'; % filt
 
 
 %% EKF running
 
 ekf = EKF_dyn(ra,rm,rg,rg./100,ru,hi,si,ab,as);
 
-%init states
+% init states
+% pos
 k = 1;
 tmp = split(data{k}, ';')';
 tmp = cellfun(@str2num,tmp(1:end-1),'un',0).';
@@ -157,7 +160,7 @@ acc_rec(:,k) = NaN(3,1);
 mag_rec(:,k) = NaN(3,1);
 gyro_rec(:,k) = NaN(3,1);
 
-
+% att
 k = 2;
 tmp = split(data{k}, ';')';
 tmp = cellfun(@str2num,tmp(1:end-1),'un',0).';
@@ -173,10 +176,12 @@ acc_rec(:,k) = reshape(acc, 3,1);
 mag_rec(:,k) = reshape(mag, 3,1);
 gyro_rec(:,k) = reshape(gyro, 3,1);
 
+% acc filtering using moving avg (init)
 for i=1:buf_len
     buf_acc(:,i) = acc;
 end
 
+% running
 for k=3:n
     % extract data from row
     tmp = split(data{k}, ';')';
@@ -209,7 +214,8 @@ for k=3:n
         mag_rec(:,k) = reshape(mag, 3,1);
         gyro_rec(:,k) = reshape(gyro, 3,1);
     end
-
+    
+    % log results
     q_ekf(:,k) = ekf.get_att();
     gyro_b_ekf(:,k) = ekf.get_g_b();
     p_ekf(:,k) = ekf.get_pos();
@@ -219,6 +225,7 @@ end
 
 
 %% Plots
+% conversion quat to eul
 eul_est = quat2eul(q_ekf.').' * 180/pi;
 FigID = 0;
 

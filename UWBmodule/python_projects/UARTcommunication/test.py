@@ -1,6 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+'''
+File used to test numpy and matplotlib.pyplot functionalities
+'''
+
 data = []
 file_name = "./data2.txt"
 

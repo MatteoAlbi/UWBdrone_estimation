@@ -1,6 +1,8 @@
 clc;
 clear all;
 
+% display histograms of onboard tag computed positions and locally computed positions
+
 log_dwm = importdata("data\uwb.txt");
 log_local = importdata("data\out.txt");
 

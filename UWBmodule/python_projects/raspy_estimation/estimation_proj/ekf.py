@@ -40,10 +40,14 @@ class EKF():
         
         
     def get_acc(self):
+        # return accelerometer raw readings
+        
         return self.imu.acceleration
     
     
     def get_acc_calibrated(self):
+        # return accelerometer calibrated readings
+        
         x,y,z = self.get_acc()
         acc = np.array([[x],[y],[z]])
         
@@ -56,10 +60,14 @@ class EKF():
     
     
     def get_mag(self):
+        # return magnetometer raw readings
+        
         return self.imu.magnetic
     
     
     def get_mag_calibrated(self):
+        # return magnetometer calibrated readings
+        
         x,y,z = self.get_mag()
         mag = np.array([[x],[y],[z]])
         
@@ -69,10 +77,14 @@ class EKF():
     
     
     def get_gyro(self):
+        # return gyroscope raw readings
+        
         return self.imu.gyro
     
     
     def get_gyro_calibrated(self):
+        # return gyroscope calibrated readings
+        
         x,y,z = self.get_gyro()
         
         x = x - self.X_att[4]
@@ -83,6 +95,8 @@ class EKF():
        
        
     def get_uwb(self, timeout = None):
+        # return UWB readings and their timestamp [s]
+        
         if(not self.uwb_ser.is_open): return None, None, None, None
         
         if(timeout == None): timeout = self.ser_timeout
@@ -120,6 +134,8 @@ class EKF():
     
     
     def get_imu(self):
+        # return IMU readings and their timestamp [s]
+        
         ax, ay, az = self.get_acc_calibrated()
         mx, my, mz = self.get_mag_calibrated()
         gx, gy, gz = self.get_gyro_calibrated()
@@ -129,6 +145,8 @@ class EKF():
     
     
     def get_all(self):
+        # return all sensors readings
+        
         ax, ay, az = self.get_acc_calibrated()
         mx, my, mz = self.get_mag_calibrated()
         gx, gy, gz = self.get_gyro_calibrated()
@@ -138,6 +156,8 @@ class EKF():
         
         
     def cal_acc(self):
+        # compute accelerometer bias and scale, filters samples using a median filter
+        
         acc_extreme_buf = np.zeros((6,1))
         str_axis = ["x", "y", "z"]
         # create a filter for each axis
@@ -185,6 +205,9 @@ class EKF():
 
 
     def cal_acc_unc(self, n = 1000):
+        # compute accelerometer uncertainty
+        # n     number of collected samples
+        
         buf = np.zeros((3,n))
         # collect data
         for i in range(0, n):
@@ -196,6 +219,10 @@ class EKF():
 
     
     def cal_mag(self, wait_ms = 10, n = 4000):
+        # compute magnetometer hard and soft iron
+        # wait_ms       wait time between samples collection
+        # n             number of collected samples
+        
         data = []
         # collect data
         try:
@@ -217,6 +244,9 @@ class EKF():
 
 
     def cal_mag_unc(self, n = 1000):
+        # compute magnetometer uncertainty
+        # n     number of collected samples
+        
         buf = np.zeros((3,n))
         # collect data
         for i in range(0, n):
@@ -228,6 +258,9 @@ class EKF():
 
 
     def cal_gyro(self, n = 1000):
+        # compute gyroscope uncertainty and bias
+        # n     number of collected samples
+        
         buf = np.zeros((3,n))
         # collect data
         for i in range(0, n):
@@ -241,6 +274,9 @@ class EKF():
     
       
     def cal_uwb_unc(self, n = 1000):
+        # compute UWB uncertainty
+        # n     number of collected samples
+        
         buf = np.zeros((3,n))
         cnt = 0
         # collect data
@@ -261,6 +297,9 @@ class EKF():
 
 
     def cal_unc_all(self, n = 1000):
+        # compute all sensors uncertainties
+        # n     number of collected samples
+        
         acc = np.zeros((3,n))
         mag = np.zeros((3,n))
         gyro = np.zeros((3,n))
@@ -310,6 +349,9 @@ class EKF():
 
     
     def save_config(self, file_name):
+        # save current config on file
+        # file_name         file name where to save the config
+        
         saved = False
         while(not saved):
             try:

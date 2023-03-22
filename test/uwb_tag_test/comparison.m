@@ -1,6 +1,8 @@
 clc;
 clear all;
 
+% summary of all 3 constant dataset (all, rtdoa, ts_acc)
+
 log_all = importdata("all\data\uwb.txt");
 log_rtdoa = importdata("rtdoa\log_filtered.txt");
 log_ts_acc = importdata("ts_acc\data\out.txt");

@@ -38,25 +38,23 @@ classdef EKF2 < handle
         % data management
         uwb_buff_iter = 1; %points to last insterted value
         G_ACC_VAL = 9.807;
-        alpha = 0.1;
-        imu_step = true;
-
+        alpha = 0.1; % gyro bias partial update
+        
     end
 
     methods
 
         function obj = EKF2(ra, rm, rg, rgb, ru, hi, si, ab, as)
             %EKF Construct an instance of this class
-            %   Detailed explanation goes here
-            obj.Ra = ra;
-            obj.Rm = rm;
-            obj.Rg = rg;
-            obj.Rgb = rgb;
-            obj.Ru = ru;
-            obj.hard_iron = hi;
-            obj.soft_iron = si;
-            obj.acc_bias = ab;
-            obj.acc_scale = as;
+            obj.Ra = ra; % acc unc
+            obj.Rm = rm; % mag unc
+            obj.Rg = rg; % gyro unc
+            obj.Rgb = rgb; % gyro bias unc
+            obj.Ru = ru; % uwb unc
+            obj.hard_iron = hi; % magnetometer hard iron
+            obj.soft_iron = si; % magnetometer sof iron
+            obj.acc_bias = ab; % accelerometer bias
+            obj.acc_scale = as; % accelerometer scale
 
         end
 
@@ -85,24 +83,31 @@ classdef EKF2 < handle
         end
 
         function init_att(obj, a, m, bg, t)
+            % init attitude state of the filter
+            % input: acc, mag, gyro_bias, sensor reading instant
+
+            % save sensors values
             obj.acc = (reshape(a, 3, 1) - obj.acc_bias) .* obj.acc_scale;
             obj.mag = obj.soft_iron' * (reshape(m, 3, 1) - obj.hard_iron);
             %obj.gyro = reshape(g, 3, 1);
             obj.imu_t = t;
-
+            
+            % TRIAD meas
             [a_n, Ra_n] = norm_acc(obj);
 %             [aG, RaG] = obj.func_aG(true);
             [m_n, Rm_n] = obj.norm_mag();
-
+            
             mD = a_n'*m_n;
             Zm_num1 = (a_n(2)*m_n(3) - a_n(3)*m_n(2));
             Zm_num2 = m_n(1) - mD*a_n(1);
             tmp = Zm_num1^2 + Zm_num2^2;
-
+            
+            % eul angles from triad meas
             phi = atan2(a_n(2), a_n(3));
             theta = asin(a_n(1));
             psi = atan2(Zm_num1, Zm_num2);
-
+            
+            % uncertainty propagation
             J_acc = [0, a_n(3) / (a_n(2)^2+a_n(3)^2), -a_n(2) / (a_n(2)^2+a_n(3)^2);
                      -1 / sqrt(1 - a_n(1)^2), 0, 0;
                      Zm_num1*(a_n(1)*m_n(1) + mD) / tmp, ... 
@@ -115,57 +120,49 @@ classdef EKF2 < handle
                      (Zm_num1*a_n(1)*a_n(2) - Zm_num2*a_n(3)) / tmp,...
                      (Zm_num1*a_n(1)*a_n(3) + Zm_num2*a_n(2)) / tmp];
             Reul = J_acc*Ra_n*J_acc' + J_mag*Rm_n*J_mag';
-
-            obj.X_att(1:4) = obj.eul_to_quat(phi, theta, psi);
+            
+            % convert from eul to quat
+            [obj.X_att(1:4), obj.P_att(1:4,1:4)]  = obj.eul_to_quat([phi, theta, psi], Reul);
             obj.X_att(5:7) = bg;
-            Jeul = [ -sin(phi/2)*cos(theta/2)*cos(psi/2)/2 + cos(phi/2)*sin(theta/2)*sin(psi/2)/2, ...
-                     -cos(phi/2)*sin(theta/2)*cos(psi/2)/2 + sin(phi/2)*cos(theta/2)*sin(psi/2)/2, ... 
-                     -cos(phi/2)*cos(theta/2)*sin(psi/2)/2 + sin(phi/2)*sin(theta/2)*cos(psi/2)/2; 
-                     cos(phi/2)*cos(theta/2)*cos(psi/2)/2 + sin(phi/2)*sin(theta/2)*sin(psi/2)/2, ...
-                     -sin(phi/2)*sin(theta/2)*cos(psi/2)/2 - cos(phi/2)*cos(theta/2)*sin(psi/2)/2, ...
-                     -sin(phi/2)*cos(theta/2)*sin(psi/2)/2 - cos(phi/2)*sin(theta/2)*cos(psi/2)/2; 
-                     -sin(phi/2)*sin(theta/2)*cos(psi/2)/2 + cos(phi/2)*cos(theta/2)*sin(psi/2)/2, ...
-                     cos(phi/2)*cos(theta/2)*cos(psi/2)/2 - sin(phi/2)*sin(theta/2)*sin(psi/2)/2, ...
-                     -cos(phi/2)*sin(theta/2)*sin(psi/2)/2 + sin(phi/2)*cos(theta/2)*cos(psi/2)/2; 
-                     -sin(phi/2)*cos(theta/2)*sin(psi/2)/2 - cos(phi/2)*sin(theta/2)*cos(psi/2)/2, ...
-                     -cos(phi/2)*sin(theta/2)*sin(psi/2)/2 - sin(phi/2)*cos(theta/2)*cos(psi/2)/2, ...
-                     cos(phi/2)*cos(theta/2)*cos(psi/2)/2 + sin(phi/2)*sin(theta/2)*sin(psi/2)/2];
-            obj.P_att(1:4,1:4) = Jeul*Reul*Jeul';
-            obj.P_att(5:7,5:7) = obj.Rgb/1000;
-
-
+            obj.P_att(5:7,5:7) = obj.Rgb;
 
         end
         
         function init_pos(obj, u, t)
+            % init position state of the filter
+
             obj.uwb_t = t;
             obj.uwb(:,1) = reshape(u, 3, 1);
             obj.uwb_buff_iter = 1; %points to last insterted value
-
+            
+            % init pos = uwb, vel = 0
             obj.X_pos = [(reshape(u(1:2), 2, 1)); 0; 0; normrnd(0,0.1,3,1)];
             tmp = diag(obj.Ru);
             obj.P_pos = diag([tmp(1:2); tmp(1:2)*2; diag(obj.Ra)]);
         end
 
         function step_imu(obj, a, m, g, t)
-            if(obj.imu_step)
-                obj.acc = (reshape(a, 3, 1) - obj.acc_bias) .* obj.acc_scale;
-                obj.mag = obj.soft_iron' * (reshape(m, 3, 1) - obj.hard_iron);
-                obj.gyro = reshape(g, 3, 1);
-    
-                obj.predict_att(t);
-                obj.update_att();
-                obj.predict_pos(t);
-                obj.update_ext_acc();
-    
-                obj.imu_t = t;
-                obj.imu_step = false;
-            end
+            % save sensor values
+            obj.acc = (reshape(a, 3, 1) - obj.acc_bias) .* obj.acc_scale;
+            obj.mag = obj.soft_iron' * (reshape(m, 3, 1) - obj.hard_iron);
+            obj.gyro = reshape(g, 3, 1);
+            
+            % kalman steps
+            obj.predict_att(t);
+            obj.update_att();
+            obj.predict_pos(t);
+            obj.update_ext_acc();
+            
+            % update imu data time instant
+            obj.imu_t = t;
 
         end
 
         function step_uwb(obj, u, t)
             % check data correctness
+            %   not perfectly zero
+            %   less than arbitrary big value
+            %   cap position variation between current state and measure [m]
             if u(1) ~= 0 && abs(u(1)) < 10000 && u(1)-obj.X_pos(1) < 9 && ...
                u(2) ~= 0 && abs(u(2)) < 10000 && u(2)-obj.X_pos(2) < 9
                 
@@ -178,10 +175,11 @@ classdef EKF2 < handle
 
                 %save new data
                 obj.uwb(:,obj.uwb_buff_iter) = reshape(u, 3, 1);
-
+                % kalman step
                 obj.update_pos(t);
+                % update uwb data time instant
                 obj.uwb_t = t;
-                obj.imu_step = true;
+
             end    
 
         end
@@ -211,7 +209,7 @@ classdef EKF2 < handle
         end
 
         function [wRb] = rotMatrixQuaternions(obj)
-            %rotMatrixQuaternions(q) given the quaternion q, return the associated
+            %rotMatrixQuaternions(q) given the att state, return the associated
             %rotation matrix from body to world
             q = obj.X_att(1:4);
             wRb = [q(1)^2 + q(2)^2 - q(3)^2 - q(4)^2, 2*q(3)*q(2) - 2*q(4)*q(1), 2*q(3)*q(1) + 2*q(4)*q(2);
@@ -219,15 +217,49 @@ classdef EKF2 < handle
                    -2*q(3)*q(1) + 2*q(4)*q(2), 2*q(2)*q(1) + 2*q(4)*q(3), q(1)^2 - q(2)^2 - q(3)^2 + q(4)^2];
         end
         
-        function q = eul_to_quat(obj, phi, theta, psi)
+        function [q, Rq] = eul_to_quat(obj, eul, Reul)
+            % conversion from euler angles to quaternions
+            % input: euler angles XYZ (roll, pitch, yaw)
+            % return: quaternion and its uncertainty
+            phi = eul(1);
+            theta = eul(2);
+            psi = eul(3);
+
             q = zeros(4,1);
             q(1) =  cos(phi/2) * cos(theta/2) * cos(psi/2) + sin(phi/2) * sin(theta/2) * sin(psi/2);
             q(2) =  sin(phi/2) * cos(theta/2) * cos(psi/2) - cos(phi/2) * sin(theta/2) * sin(psi/2);
             q(3) =  cos(phi/2) * sin(theta/2) * cos(psi/2) + sin(phi/2) * cos(theta/2) * sin(psi/2);
             q(4) =  cos(phi/2) * cos(theta/2) * sin(psi/2) - sin(phi/2) * sin(theta/2) * cos(psi/2);
+
+            Jeul = [ -sin(phi/2)*cos(theta/2)*cos(psi/2)/2 + cos(phi/2)*sin(theta/2)*sin(psi/2)/2, ...
+                     -cos(phi/2)*sin(theta/2)*cos(psi/2)/2 + sin(phi/2)*cos(theta/2)*sin(psi/2)/2, ... 
+                     -cos(phi/2)*cos(theta/2)*sin(psi/2)/2 + sin(phi/2)*sin(theta/2)*cos(psi/2)/2; 
+                     cos(phi/2)*cos(theta/2)*cos(psi/2)/2 + sin(phi/2)*sin(theta/2)*sin(psi/2)/2, ...
+                     -sin(phi/2)*sin(theta/2)*cos(psi/2)/2 - cos(phi/2)*cos(theta/2)*sin(psi/2)/2, ...
+                     -sin(phi/2)*cos(theta/2)*sin(psi/2)/2 - cos(phi/2)*sin(theta/2)*cos(psi/2)/2; 
+                     -sin(phi/2)*sin(theta/2)*cos(psi/2)/2 + cos(phi/2)*cos(theta/2)*sin(psi/2)/2, ...
+                     cos(phi/2)*cos(theta/2)*cos(psi/2)/2 - sin(phi/2)*sin(theta/2)*sin(psi/2)/2, ...
+                     -cos(phi/2)*sin(theta/2)*sin(psi/2)/2 + sin(phi/2)*cos(theta/2)*cos(psi/2)/2; 
+                     -sin(phi/2)*cos(theta/2)*sin(psi/2)/2 - cos(phi/2)*sin(theta/2)*cos(psi/2)/2, ...
+                     -cos(phi/2)*sin(theta/2)*sin(psi/2)/2 - sin(phi/2)*cos(theta/2)*cos(psi/2)/2, ...
+                     cos(phi/2)*cos(theta/2)*cos(psi/2)/2 + sin(phi/2)*sin(theta/2)*sin(psi/2)/2];
+
+            Rq = Jeul*Reul*Jeul';
         end
 
         function [qp, Rqp] = Hamilton_prod(obj, q1, q2, Rq1, Rq2)
+            % hamilton product qp = q1*q2
+            % input: quaternions to multiply and their uncertainty
+            % return: product quaternion and its uncertainty
+
+            % hamilton product
+            qp = zeros(4,1);
+            qp(1) = q1(1) * q2(1) - q1(2) * q2(2) - q1(3) * q2(3) - q1(4) * q2(4);
+            qp(2) = q1(1) * q2(2) + q1(2) * q2(1) + q1(3) * q2(4) - q1(4) * q2(3);
+            qp(3) = q1(1) * q2(3) - q1(2) * q2(4) + q1(3) * q2(1) + q1(4) * q2(2);
+            qp(4) = q1(1) * q2(4) + q1(2) * q2(3) - q1(3) * q2(2) + q1(4) * q2(1);
+
+            % uncertainty propagation
             Jq2 = [q1(1), - q1(2), - q1(3), - q1(4);
                    q1(2), q1(1), - q1(4), q1(3);
                    q1(3), q1(4), q1(1), - q1(2);
@@ -237,15 +269,11 @@ classdef EKF2 < handle
                     q2(3), - q2(4), q2(1), q2(2);
                     q2(4), q2(3), - q2(2), q2(1)];
             Rqp = Jq1*Rq1*Jq1' + Jq2*Rq2*Jq2';
-
-            qp = zeros(4,1);
-            qp(1) = q1(1) * q2(1) - q1(2) * q2(2) - q1(3) * q2(3) - q1(4) * q2(4);
-            qp(2) = q1(1) * q2(2) + q1(2) * q2(1) + q1(3) * q2(4) - q1(4) * q2(3);
-            qp(3) = q1(1) * q2(3) - q1(2) * q2(4) + q1(3) * q2(1) + q1(4) * q2(2);
-            qp(4) = q1(1) * q2(4) + q1(2) * q2(3) - q1(3) * q2(2) + q1(4) * q2(1);
+            
         end
 
         function [a_n, Ra_n] = norm_acc(obj)
+            % return: normalized acc (saved value) and its uncertainty
             a_n = obj.acc ./ norm(obj.acc);
 %             J = J_normalization(obj.acc);
 %             Ra_n = J*obj.Ra*J';
@@ -253,6 +281,7 @@ classdef EKF2 < handle
         end
 
         function [m_n, Rm_n] = norm_mag(obj)
+            % return: normalized mag (saved value) and its uncertainty
             m_n = obj.mag ./ norm(obj.mag);
             Rm_n = obj.soft_iron*obj.Rm*obj.soft_iron';
             J = obj.J_normalization(obj.mag);
@@ -261,10 +290,8 @@ classdef EKF2 < handle
         end
         
         function [z, Rz] = TRIAD(obj)
-            % Split acc contributions
-%             [aG, RaG] = obj.func_aG(false);
-
-%             [a_n, Ra_n] = obj.norm_acc();
+            % return: triad measurement and its unceratinty
+ 
             %-- ext acc compensation
             % detection
             obj.acc_err = abs(norm(obj.acc) - obj.G_ACC_VAL);
@@ -282,23 +309,23 @@ classdef EKF2 < handle
             E_ext_acc = obj.ca^2 * obj.P_pos(5:7,5:7) + ...
                         abs(norm(obj.acc - obj.ca * obj.X_pos(5:7))^2 - obj.G_ACC_VAL) * W;
             Ra_corr = obj.Ra + E_ext_acc;
+
             % normalization
             a_n = a_corr/norm(a_corr);
             J_N = obj.J_normalization(a_corr);
             Ra_n = J_N*Ra_corr*J_N';
 %             Ra_n = Ra_corr/norm(a_corr)^2;
-
+            
+            % normalized mag readings 
             [m_n, Rm_n] = obj.norm_mag();
 
+            % compute measures
             mD = a_n'*m_n;
             Zm_num1 = (a_n(2)*m_n(3) - a_n(3)*m_n(2));
             Zm_num2 = m_n(1) - mD*a_n(1);
             mN = sqrt(1 - mD.^2);
-            z = [a_n; Zm_num1/mN; Zm_num2/mN];%atan2(Zm_num1, Zm_num2)];
-%             obj.triad = z;
+            z = [a_n; Zm_num1/mN; Zm_num2/mN];
             
-%             tmp = Zm_num1^2 + Zm_num2^2;
-%             tmp2 = Zm_num2 + Zm_num1^2/Zm_num2;
             % uncert propagation matrices
             J_ZA = [eye(3,3);
                     Zm_num1*mD*m_n(1)/mN^3, ...
@@ -307,9 +334,6 @@ classdef EKF2 < handle
                     Zm_num2*mD*m_n(1)/mN^3 - (mD+a_n(1)*m_n(1))/mN, ...
                     Zm_num2*mD*m_n(2)/mN^3 -     a_n(1)*m_n(2) /mN, ...
                     Zm_num2*mD*m_n(3)/mN^3 -     a_n(1)*m_n(3) /mN];
-%                     (mD+a_n(1)*m_n(1))*Zm_num1/tmp, ...
-%                         a_n(1)*m_n(2) *Zm_num1/tmp + m_n(3)/tmp2, ...
-%                         a_n(1)*m_n(3) *Zm_num1/tmp - m_n(2)/tmp2];
 
             J_ZM = [zeros(3,3);
                     Zm_num1*mD*a_n(1)/mN^3, ...
@@ -318,14 +342,13 @@ classdef EKF2 < handle
                     Zm_num2*mD*a_n(1)/mN^3 - (a_n(1)^2 - 1) /mN, ...
                     Zm_num2*mD*a_n(1)/mN^3 -  a_n(1)*a_n(2) /mN, ...
                     Zm_num2*mD*a_n(1)/mN^3 -  a_n(1)*a_n(3) /mN];
-%                     (a_n(1)^2 - 1)*Zm_num1/tmp, ...
-%                      a_n(1)*a_n(2)*Zm_num1/tmp - a_n(3)/tmp2, ...
-%                      a_n(1)*a_n(3)*Zm_num1/tmp + a_n(2)/tmp2];
 
             Rz = J_ZA*Ra_n*J_ZA' + J_ZM*Rm_n*J_ZM';
         end
         
         function predict_att(obj, t)
+            % attitude prediction step
+
             dt = t - obj.imu_t;
 
             % quaternion rotation matrix
@@ -349,7 +372,6 @@ classdef EKF2 < handle
             J_Gatt = [ Gatt;
                     zeros(3,3)];
             J_Batt = [ 
-%                     zeros(4,3);
                     -Gatt;
                     eye(3,3)];
             J_Xatt = [ S_omega*dt/2 + eye(4), -Gatt;
@@ -364,6 +386,7 @@ classdef EKF2 < handle
         end
 
         function update_att(obj)
+            % attitude update step
             
             [z,Rz] = obj.TRIAD();
 
@@ -376,7 +399,6 @@ classdef EKF2 < handle
     
             % linearized measurement mapping
             J_H = zeros(5,7);
-%             J_H = zeros(4,7);
             J_H(:,1:4) = 2*...
               [-obj.X_att(3), obj.X_att(4), -obj.X_att(1), obj.X_att(2);
                 obj.X_att(2), obj.X_att(1), obj.X_att(4), obj.X_att(3);
@@ -433,6 +455,8 @@ classdef EKF2 < handle
         end
 
         function update_pos(obj, t)
+            % position update step
+
             dt = t - obj.uwb_t;
             
             % ext acc estimation
@@ -444,12 +468,13 @@ classdef EKF2 < handle
                 obj.X_att(2), obj.X_att(1), obj.X_att(4), obj.X_att(3);
                 obj.X_att(1), -obj.X_att(2), -obj.X_att(3), obj.X_att(4)];
             Ra_ext = J_wRb*obj.P_att(1:4,1:4)*J_wRb' + obj.Ra;
-
-            if obj.uwb_buff_iter == 1
+            
+            % update depending on number of uwb data available
+            if obj.uwb_buff_iter == 1 % pos
                 z = [obj.uwb(1:2, 1); acc_ext];
                 Rz = [obj.Ru(1:2,1:2), zeros(2,3); zeros(3,2), Ra_ext];
                 H = [eye(2), zeros(2,5); zeros(3,4), eye(3)];
-            else
+            else % pos+vel
                 z = [obj.uwb(1:2, 2); (obj.uwb(1:2, 2) - obj.uwb(1:2, 1)) / dt; acc_ext];
                 tmp = diag(obj.Ru(1:2,1:2));
                 Rz = [diag([tmp; tmp*2/dt^2]), zeros(4,3); zeros(3,4), Ra_ext];
@@ -466,6 +491,7 @@ classdef EKF2 < handle
         end
     
         function update_ext_acc(obj)
+            % updates only the ext acc state
             
             % ext acc estimation
             wRb = obj.rotMatrixQuaternions();
