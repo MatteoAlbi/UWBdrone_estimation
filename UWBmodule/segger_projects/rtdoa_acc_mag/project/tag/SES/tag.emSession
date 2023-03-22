@@ -95,7 +95,7 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="89" useTextEdit="1" useBinaryEdit="0" left="0" path="main.c" selected="0" top="85" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="232" useTextEdit="1" useBinaryEdit="0" left="0" path="LIN_ALG/linear_algebra.c" selected="0" top="211" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="54" useTextEdit="1" useBinaryEdit="0" left="0" path="LIN_ALG/linear_algebra.h" selected="0" top="38" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="10" y="56" useTextEdit="1" useBinaryEdit="0" left="0" path="RTDOA_EST/rTDoA_est.h" selected="0" top="54" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="56" useTextEdit="1" useBinaryEdit="0" left="0" path="RTDOA_EST/rTDoA_est.h" selected="0" top="54" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="239" useTextEdit="1" useBinaryEdit="0" left="0" path="TDOA/TDOA.c" selected="0" top="226" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="20" useTextEdit="1" useBinaryEdit="0" left="0" path="TDOA/TDOA.h" selected="0" top="6" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="461" useTextEdit="1" useBinaryEdit="0" left="0" path="PY_COM/communication_python.c" selected="0" top="440" codecName="Default"/>
@@ -111,7 +111,7 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="2927" useTextEdit="1" useBinaryEdit="0" left="0" path="LIS2DH12/lis2dh12_reg.c" selected="0" top="2914" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="721" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/drivers_nrf/twi_master/nrf_drv_twi.c" selected="0" top="709" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1435" useTextEdit="1" useBinaryEdit="0" left="0" path="LIS2MDL/lis2mdl_reg.c" selected="0" top="1417" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="59" y="28" useTextEdit="1" useBinaryEdit="0" left="0" path="RTDOA_EST/rTDoA_est.c" selected="1" top="10" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="28" useTextEdit="1" useBinaryEdit="0" left="0" path="RTDOA_EST/rTDoA_est.c" selected="1" top="10" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1096" useTextEdit="1" useBinaryEdit="0" left="0" path="LIS2DH12/lis2dh12_reg.h" selected="0" top="1092" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="191" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/external/freertos/portable/CMSIS/nrf52/port_cmsis.c" selected="0" top="21" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="6" useTextEdit="1" useBinaryEdit="0" left="0" path="../../common/config.h" selected="0" top="0" codecName="Default"/>
@@ -119,5 +119,5 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="147" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/fds/fds.h" selected="0" top="141" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/external/freertos/source/queue.c" selected="0" top="0" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="tag" fileDialogDefaultFilter="*.c;*.h" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" debugSearchFileMap="" fileDialogInitialDirectory="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/EKF" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="tag" fileDialogDefaultFilter="*.c;*.h" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" debugSearchFileMap="" fileDialogInitialDirectory="E:/matte/Documents/uni/master EIT/1st year/2nd semester/UV/UWBdrone_estimation/UWBmodule/segger projects/rtdoa_acc_mag/project/tag/SES/EKF" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

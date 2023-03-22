@@ -1,9 +1,9 @@
 clear all;
-close all;
+%close all;
 clc;
 
 % experiment parameters
-NoiseScale = 1e-1;
+NoiseScale = 1e-2;
 BiasScale = 1e-1;
 Duration = 100;
 g = 9.807;
